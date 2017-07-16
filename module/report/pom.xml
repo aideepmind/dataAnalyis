@@ -5,11 +5,11 @@
   <parent>
     <groupId>com.hejia.dataAnalysis</groupId>
     <artifactId>dataAnalysis-module</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${project-version}</version>
   </parent>
   <groupId>com.hejia.dataAnalysis.module</groupId>
   <artifactId>dataAnalysis-module-report</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${project-version}</version>
   <name>report</name>
   <url>http://maven.apache.org</url>
   <properties>

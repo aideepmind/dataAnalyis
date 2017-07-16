@@ -4,7 +4,7 @@
 
   <groupId>com.hejia</groupId>
   <artifactId>dataAnalysis</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${project-version}</version>
   <packaging>pom</packaging>
 
   <distributionManagement>
@@ -34,7 +34,7 @@
         <jedis-version>2.5.2</jedis-version>
         <lucene>5.0.0</lucene>
         <jsoup-version>1.8.3</jsoup-version>
-        <project-version>1.0</project-version>
+        <project-version>0.0.1</project-version>
         <poi-version>3.10-FINAL</poi-version>
         <axis2-version>1.6.2</axis2-version>
     </properties>
@@ -671,7 +671,7 @@
     <!-- 插件配置 -->
     <build>
         <plugins>
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.0</version>
@@ -680,7 +680,7 @@
                     <target>${java-version}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>

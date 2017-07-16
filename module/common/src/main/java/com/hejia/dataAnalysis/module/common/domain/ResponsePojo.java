@@ -8,7 +8,7 @@ import net.sf.json.JSONObject;
  * @Date: 2015年4月22日
  * @version: 1.0
  */
-public class ResponsePojo {
+public class ResponsePojo implements Pojo {
 	
 	private boolean isSuccess;
 	private String failType;

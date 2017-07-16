@@ -2,14 +2,21 @@ package com.hejia.dataAnalysis.module.common.domain;
 
 import java.util.List;
 
-public class TreePojo {
+/**
+ * @Description: 
+ * @author: chenyongqiang
+ * @Date: 2017年7月16日
+ * @version: 1.0
+ */
+public class TreePojo implements Pojo {
+	
 	private Object id;
 	private String text;
 	private State state;
 	private String icon;
-	
+
 	private List<TreePojo> children;
-	
+
 	public State getState() {
 		return state;
 	}
@@ -17,6 +24,7 @@ public class TreePojo {
 	public void setState(State state) {
 		this.state = state;
 	}
+
 	public Object getId() {
 		return id;
 	}
@@ -32,8 +40,6 @@ public class TreePojo {
 	public void setText(String text) {
 		this.text = text;
 	}
-
-
 
 	public List<TreePojo> getChildren() {
 		return children;
@@ -56,7 +62,7 @@ public class TreePojo {
 		private boolean selected;
 		private boolean loaded;
 		private boolean disabled;
-		
+
 		public boolean isDisabled() {
 			return disabled;
 		}
@@ -89,9 +95,5 @@ public class TreePojo {
 			this.loaded = loaded;
 		}
 
-	
-	  
-		
-	
 	}
 }

@@ -6,7 +6,7 @@ package com.hejia.dataAnalysis.module.common.domain;
  * @Date: 2015年8月21日
  * @version: 1.0
  */
-public class NoticePojo {
+public class NoticePojo implements Pojo {
 	private int count = 0;//数量
 	private int type;//通知类型
 	private int showType;//展示方式

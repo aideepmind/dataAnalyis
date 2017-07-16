@@ -16,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -50,9 +52,12 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 public class HttpUtil {
-	private static HashMap<String, HttpClient> sessionMap = new HashMap<String, HttpClient>();
-
+	
 	private static Logger logger = Logger.getLogger(HttpUtil.class);
+	
+	private static HashMap<String, HttpClient> sessionMap = new HashMap<String, HttpClient>();
+	public static final Pattern IP_PATTERN = Pattern.compile("^\\d+\\.\\d+\\.\\d+\\.\\d+$");
+	
 
 	public HttpUtil() {
 	}
@@ -667,60 +672,65 @@ public class HttpUtil {
 		return url.substring(url.indexOf("/", 7));
 	}
 
-	/**
-	 * @Definition: 检测当前URL是否可连接或是否有效
-	 * @author: Henry
-	 * @Date: 2016年7月14日
-	 * @param url
-	 * @return
-	 */
-	public synchronized static boolean isConnect(String urlStr) {
-		int counts = 0;
-		boolean b = false;
-		if (urlStr == null || urlStr.length() <= 0) {
-			return b;
-		}
-		while (counts < 5) {
-			try {
-				URL url = new URL(urlStr);
-				HttpURLConnection con = (HttpURLConnection) url.openConnection();
-				int state = con.getResponseCode();
-				System.out.println(counts + "= " + state);
-				if (state == 200) {
-					b = true;
-					break;
-				} else {
-					counts++;
-					continue;
-				}
-
-			} catch (Exception ex) {
-				counts++;
-				continue;
-			}
-		}
-		return b;
-	}
 
 	/**
 	 * 向指定 URL 发送POST方法的请求
-	 * 
-	 * @param url
-	 *            发送请求的 URL
-	 * @param param
-	 *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+	 * @param url 发送请求的 URL
+	 * @param param  请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
 	 * @return 所代表远程资源的响应结果
 	 * @throws IOException 
 	 */
 	public static String sendPost(String url, List<Object> list) throws IOException {
-
 		return "";
 	}
-
-	public static void main(String[] args) {
-		String url = "https://www.baidu.com/";
-		System.out.println(isConnect(url));
-		//System.out.println(getPort(url));
-		//System.out.println(getUri(url));
+	
+	
+	/**
+	 * @Definition: 获取客户端的公网（外网）ip，如果浏览器处在局域网内，那么获取的是192.168.1.x，也就是局域网ip，如果本机浏览器，那么获取的是127.0.0.1
+	 * @author: chenyongqiang
+	 * @Date: 2015年12月29日
+	 * @param request
+	 * @return
+	 */
+	public static String getIpAddr(HttpServletRequest request) {
+		/*Enumeration e = request.getHeaderNames();
+		while (e.hasMoreElements()) {
+			String name = (String)e.nextElement();
+			System.out.println("name:" + name + ",value:" + request.getHeader(name));
+		}*/
+		String ip = request.getHeader("X-Real-IP");//真实ip，在nginx配置中补充的
+		if (ip == null || !IP_PATTERN.matcher(ip).matches()) {
+			ip = request.getHeader("X-Forwarded-For");
+		}
+		if (ip == null || !IP_PATTERN.matcher(ip).matches()) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (ip == null || !IP_PATTERN.matcher(ip).matches()) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ip == null || !IP_PATTERN.matcher(ip).matches()) {
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (ip == null || !IP_PATTERN.matcher(ip).matches()) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (ip == null || !IP_PATTERN.matcher(ip).matches()) {
+			ip = request.getRemoteAddr();
+		}
+		//可能存在多个代理ip
+		if (ip != null) {
+			//System.out.println("访问ip： " + ip + "，时间：" + DateUtil.toString(new Date()));
+			String ips[] = ip.split(",");
+			for (int i = 0; i < ips.length; i++) {
+				String ip2 = ips[i];
+				if ("127.0.0.1".equals(ip2)) {//继续
+					ip = ip2;
+				} else if (IP_PATTERN.matcher(ip2).matches()) {
+					ip = ip2;
+					break;
+				}
+			}
+		}
+		return ip;
 	}
 }

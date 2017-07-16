@@ -8,6 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * @Description: 
+ * @author: chenyongqiang
+ * @Date: 2017年7月16日
+ * @version: 1.0
+ */
 public class WeixinTemplateUtil {
 	
 	public static Map<String, String> tMap = new HashMap<String, String>();

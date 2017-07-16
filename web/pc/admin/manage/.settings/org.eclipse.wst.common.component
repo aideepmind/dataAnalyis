@@ -5,6 +5,12 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module archiveName="dataAnalysis-module-common-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dataAnalysis-module-common/dataAnalysis-module-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dataAnalysis-module-account-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dataAnalysis-module-account/dataAnalysis-module-account">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="manage"/>
         <property name="java-output-path" value="/manage/target/classes"/>
     </wb-module>
