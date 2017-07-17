@@ -15,6 +15,14 @@ public class ResponsePojo implements Pojo {
 	private String failReason;
 	private Object message;
 	
+	/**
+	 * 以下是登录相关的
+	 */
+	public final static String FAIL_TYPE_LOGIN_SINGLE_IP_FAIL_TIMES_TOO_MUCH = "LOGIN_SINGLE_IP_FAIL_TIMES_TOO_MUCH";
+	public final static String FAIL_TYPE_LOGIN_SINGLE_ACCOUNT_FAIL_TIMES_TOO_MUCH = "LOGIN_SINGLE_ACCOUNT_FAIL_TIMES_TOO_MUCH";
+	public final static String FAIL_TYPE_LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES_TOO_MUCH = "LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES_TOO_MUCH";
+	
+	
 	public ResponsePojo() {
 		
 	}

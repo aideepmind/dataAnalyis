@@ -10,7 +10,11 @@ import net.sf.ehcache.Element;
  * @version: 1.0
  */
 public class EhcacheUtils {
-
+	public static final String LOGIN_VERIFY_CODE = "LOGIN_VERIFY_CODE"; // 登录验证码
+	public static final String LOGIN_SINGLE_IP_FAIL_TIMES = "LOGIN_SINGLE_IP_FAIL_TIMES"; // 登录单IP失败次数，防止暴力破解
+	public static final String LOGIN_SINGLE_ACCOUNT_FAIL_TIMES = "LOGIN_SINGLE_ACCOUNT_FAIL_TIMES"; // 登录单账户失败次数，防止暴力破解
+	public static final String LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES = "LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES"; // 登录单IP+账户失败次数，防止暴力破解
+	
 	public static final String CACHE_NAME_TOKEN = "tokenCache";//凭证
 	public static final String CACHE_NAME_UNIONID = "unionidCache";//unionid
 	public static final String CACHE_NAME_CODE = "codeCache";//认证码
