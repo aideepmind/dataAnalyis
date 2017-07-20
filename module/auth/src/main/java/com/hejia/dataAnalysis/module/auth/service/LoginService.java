@@ -21,6 +21,28 @@ public interface LoginService extends BaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public ResponsePojo doLogin(RequestArg ra) throws ServiceException;
+	public ResponsePojo login(RequestArg ra) throws ServiceException;
+	
+	/**
+	 * @Definition: 生成访问凭证
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月19日
+	 * @param loginName
+	 * @param ip
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String generateAccessToken(String loginName, String ip) throws ServiceException;
+	
+	/**
+	 * @Definition: 校验访问凭证
+	 * @author: chenyongqiang
+	 * @Date: 2016年2月23日
+	 * @param token
+	 * @param ip
+	 * @return
+	 * @throws ServiceException
+	 */
+	public ResponsePojo checkAccessToken(String token, String ip) throws ServiceException;
 	
 }

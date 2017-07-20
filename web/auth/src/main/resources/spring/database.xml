@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/data/jpa"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+  
+  <repositories base-package="com.hejia.dataAnalysis.module.*.dao" />
+  <beans:bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <beans:property name="packagesToScan" value="com.hejia.dataAnalysis.module" />
+    <beans:property name="jpaVendorAdapter">
+      <beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+    </beans:property>
+    <beans:property name="jpaProperties">
+      <beans:props>
+        <beans:prop key="hibernate.connection.driver_class">${jdbc.driverClassName}</beans:prop>
+        <beans:prop key="hibernate.connection.url">${jdbc.url}</beans:prop>
+        <beans:prop key="hibernate.connection.username">${jdbc.username}</beans:prop>
+        <beans:prop key="hibernate.connection.password">${jdbc.password}</beans:prop>
+        <beans:prop key="hibernate.c3p0.min_size">10</beans:prop>
+        <!-- <beans:prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</beans:prop> -->
+        <beans:prop key="hibernate.dialect">${hibernate.dialect}</beans:prop>
+        <beans:prop key="hibernate.show_sql">${hibernate.show_sql}</beans:prop>
+        <beans:prop key="hibernate.format_sql">${hibernate.format_sql}</beans:prop>
+        <beans:prop key="hibernate.show_sql">${hibernate.show_sql}</beans:prop>
+		<beans:prop key="hibernate.cache.use_query_cache">false</beans:prop><!-- 开启查询缓存 -->
+		<beans:prop key="hibernate.cache.use_second_level_cache">false</beans:prop><!-- 开启二级缓存 -->
+        <beans:prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</beans:prop><!-- 由于spring也使用了Ehcache, 保证双方都使用同一个缓存管理器 -->
+      </beans:props>
+    </beans:property>
+  </beans:bean>
+  <!-- 事务管理 -->
+  <beans:bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <beans:property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </beans:bean>
+</beans:beans>

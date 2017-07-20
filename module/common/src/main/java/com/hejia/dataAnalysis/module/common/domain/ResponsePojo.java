@@ -18,9 +18,18 @@ public class ResponsePojo implements Pojo {
 	/**
 	 * 以下是登录相关的
 	 */
-	public final static String FAIL_TYPE_LOGIN_SINGLE_IP_FAIL_TIMES_TOO_MUCH = "LOGIN_SINGLE_IP_FAIL_TIMES_TOO_MUCH";
+	public final static String FAIL_TYPE_LOGIN_SINGLE_IP_FAIL_TIMES_TOO_MUCH = "LOGIN_SINGLE_IP_FAIL_TIMES_TOO_MUCH"; // 时间段内单ip重试次数太多
 	public final static String FAIL_TYPE_LOGIN_SINGLE_ACCOUNT_FAIL_TIMES_TOO_MUCH = "LOGIN_SINGLE_ACCOUNT_FAIL_TIMES_TOO_MUCH";
 	public final static String FAIL_TYPE_LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES_TOO_MUCH = "LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES_TOO_MUCH";
+	public final static String FAIL_TYPE_LOGIN_PARAMETER_ILLEGAL = "LOGIN_PARAMETER_ILLEGAL"; // 参数非法
+	public final static String FAIL_TYPE_LOGIN_NAME_CAN_NOT_EMPTY = "LOGIN_NAME_CAN_NOT_EMPTY"; // 用户名不能为空
+	public final static String FAIL_TYPE_LOGIN_NAME_FORMAT_ERROR = "LOGIN_NAME_FORMAT_ERROR"; // 用户名不能为空
+	public final static String FAIL_TYPE_LOGIN_ACCOUNT_NOT_EXIST = "LOGIN_NAME_NOT_EXIST"; // 账户不存在
+	public final static String FAIL_TYPE_LOGIN_ACCOUNT_STATUS_ERROR = "LOGIN_ACCOUNT_STATUS_ERROR"; // 账户状态错误：被禁止、被删除等
+	public final static String FAIL_TYPE_LOGIN_PWD_ERROR = "LOGIN_PWD_ERROR"; // 密码错误
+	public final static String FAIL_TYPE_LOGIN_CODE_ERROR = "LOGIN_CODE_ERROR"; // 验证码错误
+	public final static String FAIL_TYPE_LOGIN_VERIFY_CODE_ERROR = "LOGIN_VERIFY_CODE_ERROR"; // 图形验证码错误
+	public final static String FAIL_TYPE_LOGIN_SESSION_ID_EMPTY = "LOGIN_SESSION_ID_EMPTY"; // sessionid为空
 	
 	
 	public ResponsePojo() {

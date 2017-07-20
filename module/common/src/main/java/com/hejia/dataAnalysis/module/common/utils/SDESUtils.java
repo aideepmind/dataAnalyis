@@ -36,7 +36,7 @@ public class SDESUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String encrypt(String key, String data) throws Exception{
+	public static String encrypt(String key, String data) throws Exception {
 		//获取随机盐
 		Random random = new Random();
 		byte[] saltByte = new byte[8];

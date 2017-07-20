@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 配置跟varnish相关的信息，每种类型及同类型不同功能的文件需要缓存多上时间 ，可能还要其他配置，如果用到，需各位自行加上-->
+<cfg>
+	<list>
+		<item file-type="default"><!-- 默认的html文件缓存的时间，可能自定义某种功能的html文件的缓存时间，使用function-type -->
+			<ttl>15m</ttl>
+		</item>
+		<item file-type="html">
+			<ttl>20m</ttl>
+		</item>
+		<item file-type="js">
+			<ttl>20m</ttl>
+		</item>
+		<item file-type="css">
+			<ttl>20m</ttl>
+		</item>
+		<item file-type="pdf">
+			<ttl>60s</ttl>
+		</item>
+		<item file-type="zip">
+			<ttl>600s</ttl>
+		</item>
+		<item file-type="rar">
+			<ttl>600s</ttl>
+		</item>
+		<item function-type="stu-home">
+			<ttl>24h</ttl><!-- 24小时 -->
+		</item>
+		<item function-type="resume"><!-- 简历筛选时用 -->
+			<url>http://corp.minixiao.com/resume/{id}.html</url>
+		</item>
+		<item function-type="position">
+			<ttl>60m</ttl><!-- 60分钟 -->
+			<url>http://www.minixiao.com/position/st/{id}.html</url>
+		</item>
+		<item function-type="company">
+			<ttl>60m</ttl><!-- 60分钟 -->
+			<url>http://www.minixiao.com/company/st/{id}.html</url>
+		</item>
+		<item function-type="activity">
+			<ttl>60m</ttl><!-- 60分钟 -->
+			<url>http://www.minixiao.com/activity/st/{id}.html</url>
+		</item>
+		<item function-type="index">
+			<ttl>2h</ttl><!-- 2小时 -->
+			<url>http://www.minixiao.com/index.html</url>
+		</item>
+	</list>
+</cfg>

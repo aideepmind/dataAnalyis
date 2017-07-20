@@ -4,10 +4,14 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hejia.dataAnalysis.module.common.domain.BaseDomain;
@@ -47,6 +51,27 @@ public class Account implements BaseDomain {
 	private Integer modifyId;
 	private Date startDate; // 账号有效期开始时间
 	private Date endDate; // 账号有效期结束时间
+
+	@Transient
+	private String accessToken;
+
+	/**
+	 * 用户状态
+	 */
+	public static final int STATUS_NORMAL = 1; // 正常
+	public static final int STATUS_DISABLE = 2; // 禁用
+	public static final int STATUS_SILENCE = 3; // 禁言
+	public static final int STATUS_INACTIVE = 4; // 未激活
+	public static final int STATUS_DELETED = 5; // 被删除
+	public static final int STATUS_NOT_PERFECT = 6; // 未完善
+	public static final int STATUS_AUDITING = 7; // 审核中
+
+	/**
+	 * 账号类型
+	 */
+	public static final int TYPE_ADMIN = 1; // 管理员
+	public static final int TYPE_FREE = 2; // 游离于各个平台共享某部分信息的用户，不受限于平台的异同-chenyq
+	public static final int ID_SYSTEM = -1; // 系统id
 
 	// Constructors
 
@@ -92,6 +117,8 @@ public class Account implements BaseDomain {
 	// Property accessors
 	@Id
 	@Column(name = "acc_id", unique = true, nullable = false)
+	@SequenceGenerator(name = "accountSeqGenerator", sequenceName = "t_account_seq_id", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accountSeqGenerator")
 	public Integer getAccId() {
 		return this.accId;
 	}
@@ -284,4 +311,12 @@ public class Account implements BaseDomain {
 		this.endDate = endDate;
 	}
 
+	@Transient
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
 }

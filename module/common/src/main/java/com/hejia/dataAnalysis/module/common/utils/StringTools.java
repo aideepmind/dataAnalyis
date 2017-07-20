@@ -1,6 +1,7 @@
 package com.hejia.dataAnalysis.module.common.utils;
 
 import java.io.UnsupportedEncodingException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,8 +15,10 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import org.apache.commons.lang.StringUtils;
+
+
 /**
- * @Description: 
+ * @Description:
  * @author: chenyongqiang
  * @Date: 2015年4月28日
  * @version: 1.0
@@ -122,6 +125,7 @@ public class StringTools {
 
 	/**
 	 * 判断字符串是否为能够转换为int型的数字
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -187,13 +191,13 @@ public class StringTools {
 			pos = src.indexOf("%", lastPos);
 			if (pos == lastPos) {
 				if (src.charAt(pos + 1) == 'u') {
-					ch = (char) Integer.parseInt(src
-							.substring(pos + 2, pos + 6), 16);
+					ch = (char) Integer.parseInt(
+							src.substring(pos + 2, pos + 6), 16);
 					tmp.append(ch);
 					lastPos = pos + 6;
 				} else {
-					ch = (char) Integer.parseInt(src
-							.substring(pos + 1, pos + 3), 16);
+					ch = (char) Integer.parseInt(
+							src.substring(pos + 1, pos + 3), 16);
 					tmp.append(ch);
 					lastPos = pos + 3;
 				}
@@ -491,24 +495,25 @@ public class StringTools {
 		boolean flag = m.matches();
 		return flag;
 	}
-/**
- * 判断ip地址是否合法   张宏
- * @param ipAddress
- * @return
- */
+
+	/**
+	 * 判断ip地址是否合法 张宏
+	 * 
+	 * @param ipAddress
+	 * @return
+	 */
 	public static boolean isIp(String ipAddress) {
 		String test = "([1-9]|[1-9]\\d|1\\d{2}|2[0-1]\\d|22[0-3])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}";
 		Pattern pattern = Pattern.compile(test);
 		Matcher matcher = pattern.matcher(ipAddress);
 		return matcher.matches();
 	}
-	
-	public static void main(String[] s){
+
+	public static void main(String[] s) {
 		boolean b = isIp("10.230.3.251");
 		System.out.println(b);
 	}
-	
-	
+
 	/**
 	 * 将LDAP中特殊字符替换为 字符
 	 * 
@@ -521,7 +526,9 @@ public class StringTools {
 		String returnstr = null;
 		if (StringUtils.isNotEmpty(str)) {
 			str = str.replaceAll("\\\\", "\\\\5c");
-			returnstr = str.replaceAll("\\*", "\\\\2a").replaceAll("\\(", "\\\\28").replaceAll("\\)", "\\\\29").replaceAll("NUL", "\\\\00");
+			returnstr = str.replaceAll("\\*", "\\\\2a")
+					.replaceAll("\\(", "\\\\28").replaceAll("\\)", "\\\\29")
+					.replaceAll("NUL", "\\\\00");
 		}
 		return returnstr;
 	}

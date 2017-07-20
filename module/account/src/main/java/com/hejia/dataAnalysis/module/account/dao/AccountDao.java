@@ -1,5 +1,7 @@
 package com.hejia.dataAnalysis.module.account.dao;
 
+import java.util.List;
+
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.hejia.dataAnalysis.module.account.domain.Account;
@@ -12,4 +14,13 @@ import com.hejia.dataAnalysis.module.account.domain.Account;
  */
 public interface AccountDao extends PagingAndSortingRepository<Account, Integer> {
 	
+	/**
+	 * @Definition: 根据电话或邮箱查找集合
+	 * @author: chenyongqiang
+	 * @Date: 2015年5月22日
+	 * @param mobile
+	 * @param email
+	 * @return
+	 */
+	public List<Account> findByMobileOrEmail(String mobile, String email);
 }

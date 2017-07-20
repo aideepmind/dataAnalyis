@@ -11,8 +11,8 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import com.hejia.dataAnalysis.module.common.Constant;
-import com.hejia.dataAnalysis.module.common.utils.DateUtil;
-import com.hejia.dataAnalysis.module.common.utils.MD5Util;
+import com.hejia.dataAnalysis.module.common.utils.DateUtils;
+import com.hejia.dataAnalysis.module.common.utils.MD5Utils;
 import com.hejia.dataAnalysis.module.common.utils.SDESUtils;
 
 /**
@@ -70,13 +70,13 @@ public class SocketRequest {
 		b.append(",'contentType':").append("'").append(header.getContentType()).append("'");
 		b.append(",'contentEncoding':").append("'").append(header.getContentEncoding()).append("'");
 		//时间
-		b.append(",'date':").append("'").append(DateUtil.toString(new Date(), DateUtil.FORMAT_COMMON_LONG)).append("'");
+		b.append(",'date':").append("'").append(DateUtils.toString(new Date(), DateUtils.FORMAT_COMMON_LONG)).append("'");
 		b.append("}");
 		//内容
 		try {
 			b.append(",'content':").append("'");
 			if (SocketHeader.CONTENT_ENCODING_BASE64.equals(header.getContentEncoding())) {//base64
-				b.append(Base64Utils.encodeToString(content.getBytes(MD5Util.CHARSET_UTF8)));
+				b.append(Base64Utils.encodeToString(content.getBytes(MD5Utils.CHARSET_UTF8)));
 			} else if (SocketHeader.CONTENT_ENCODING_DES.equals(header.getContentEncoding())) {//des
 				b.append(SDESUtils.encrypt(Constant.COOKIE_DES_KEY, content));
 			}

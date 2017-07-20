@@ -13,8 +13,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import com.hejia.dataAnalysis.module.common.socket.SocketFactory;
-import com.hejia.dataAnalysis.module.common.utils.HttpUtil;
-import com.hejia.dataAnalysis.module.common.utils.StringFormatUtil;
+import com.hejia.dataAnalysis.module.common.utils.HttpUtils;
+import com.hejia.dataAnalysis.module.common.utils.StringFormatUtils;
 import com.hejia.dataAnalysis.module.common.utils.thread.ThreadManagerPool;
 
 /**
@@ -73,7 +73,7 @@ public class VarnishUtil {
 		if (item != null) {
 			String url = item.get("url");
 			if (vMap != null) {
-				url = StringFormatUtil.format(url, vMap);
+				url = StringFormatUtils.format(url, vMap);
 			}
 			System.out.println(url);
 			purge(url);
@@ -88,9 +88,8 @@ public class VarnishUtil {
 	 */
 	private static void purge(final String url) {
 		ThreadManagerPool.addThread(new Runnable() {
-			@Override
 			public void run() {
-				String rep = HttpUtil.purge(url);
+				String rep = HttpUtils.purge(url);
 				System.out.println(rep);
 			}
 		});

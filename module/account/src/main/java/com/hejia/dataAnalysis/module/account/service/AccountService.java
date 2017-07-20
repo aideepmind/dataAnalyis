@@ -10,8 +10,6 @@ import org.springframework.data.domain.Pageable;
 
 import com.hejia.dataAnalysis.module.account.domain.Account;
 import com.hejia.dataAnalysis.module.account.domain.AccountProfile;
-import com.hejia.dataAnalysis.module.account.domain.Group;
-import com.hejia.dataAnalysis.module.account.domain.Permission;
 import com.hejia.dataAnalysis.module.common.domain.BaseDomain;
 import com.hejia.dataAnalysis.module.common.domain.RequestArg;
 import com.hejia.dataAnalysis.module.common.domain.ResponsePojo;
@@ -26,4 +24,12 @@ import com.hejia.dataAnalysis.module.common.service.DomainBaseService;
  */
 public interface AccountService extends DomainBaseService {
 	
+	/**
+	 * @Definition: 根据手机号或者email查找用户
+	 * @author: chenyongqiang
+	 * @Date: 2015年4月9日
+	 * @param username
+	 * @return
+	 */
+	public Account findByMobileOrEmail(String username) throws ServiceException;
 }

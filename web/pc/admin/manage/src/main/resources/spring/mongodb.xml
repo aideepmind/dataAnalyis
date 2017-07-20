@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+    ">
+
+    <!-- 1.7版本+不支持mongo,支持mongo-client,options为client-options -->
+    <!-- Usage of 'UserCredentials' with 'MongoClient' is no longer supported -->
+    <!-- 配置mongodb连接池 ,创建mongoClient实例-->
+    <!--credentials="mongodb://${mongo.user}:${mongo.pwd}@${mongo.host}:${mongo.port}/${mongo
+    .dbname}"为什么不起作用
+    如果需要验证,mongo-client需要加这句: credentials="${mongo.user}:${mongo.pwd}@${mongo.dbname}"
+    -->
+    <mongo:mongo-client id="mongoClient"  host="${mongo.host}" port="${mongo.port}">
+        <mongo:client-options
+                connections-per-host="${mongo.connectionsPerHost}"
+                min-connections-per-host="${mongo.minConnectionsPerHost}"
+                threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
+                connect-timeout="${mongo.connectTimeout}"
+                max-wait-time="${mongo.maxWaitTime}"
+                socket-keep-alive="${mongo.socketKeepAlive}"
+                socket-timeout="${mongo.socketTimeout}"
+                description="${mongo.description}"
+                max-connection-idle-time="${mongo.maxConnectionIdleTime}"
+                max-connection-life-time="${mongo.maxConnectionLifeTime}"
+                heartbeat-socket-timeout="${mongo.heartbeatSocketTimeout}"
+                heartbeat-connect-timeout="${mongo.heartbeatConnectTimeout}"
+                min-heartbeat-frequency="${mongo.minHeartbeatFrequency}"
+                heartbeat-frequency="${mongo.heartbeatFrequency}"
+
+        />
+    </mongo:mongo-client>
+
+    <!-- dbname="${mongo.dbname}" host="${mongo.host}"
+                      port="${mongo.port}" username="${mongo.user}" password="${mongo.pwd}"
+                      mongo-ref="mongoClient" -->
+    <mongo:db-factory id="mongoDbFactory"
+                      dbname="${mongo.dbname}"
+                      mongo-ref="mongoClient"/>
+
+    <!-- 1.Spring提供的mongodb操作模板-->
+    <mongo:template id="mongoTemplate" db-factory-ref="mongoDbFactory" write-concern="NORMAL"/>
+    <!-- 2.Spring提供的mongodb操作模板-->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongoDbFactory" />
+    </bean>
+
+
+    <!-- MongoDB GridFS Template 支持，操作mongodb存放的文件 -->
+    <!-- 
+    <mongo:mapping-converter id="converter" db-factory-ref="mongoDbFactory" base-package="cn.idongjia.web.dao"/>
+    <mongo:gridFsTemplate id="gridFsTemplcate" db-factory-ref="mongoDbFactory" converter-ref="converter" /> -->
+    
+	<!-- mongodb bean的仓库目录，会自动扫描扩展了MongoRepository接口的接口进行注入 -->
+    <mongo:repositories base-package="com.hejia.dataAnalysis.module.*.dao" />
+    
+</beans>

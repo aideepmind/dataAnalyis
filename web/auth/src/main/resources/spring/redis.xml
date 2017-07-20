@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- jedis碎片信息 -->
+    <bean id="jedisShardInfo" class="redis.clients.jedis.JedisShardInfo">
+        <constructor-arg name="name" value=""/>
+        <constructor-arg name="host" value="localhost" /><!-- localhost or  -->
+        <constructor-arg name="port" value="6379" type="int"/>
+        <constructor-arg name="timeout" value="6000" type="int"/>
+    </bean>
+
+    <!-- redis 相关配置 -->
+    <bean id="jedisConnFactory"  class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" >
+        <property name="usePool" value="true" />
+        <property name="hostName" value="localhost" /><!-- localhost or  -->
+        <property name="password" value="hejia_123!"/>
+        <property name="shardInfo" ref="jedisShardInfo"/>
+    </bean>
+
+    <!-- redis template definition -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnFactory" />
+        <property name="keySerializer" ref="stringSerializer"/>
+        <property name="valueSerializer" ref="jdkSerializer" />
+    </bean>
+    <bean id="stringSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+    <bean id="jdkSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+</beans>

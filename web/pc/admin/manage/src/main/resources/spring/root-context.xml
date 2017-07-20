@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       default-autowire="byName"><!--  default-lazy-init="true" -->
+
+    <context:annotation-config/>
+    <!-- Scans the classpath of this application for @Components to deploy as beans -->
+    <context:component-scan base-package="com.hejia.dataAnalysis"></context:component-scan>
+    
+    <!-- AOP监听-->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	
+    <!-- 事务注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <task:annotation-driven/>
+    
+    <cache:annotation-driven cache-manager="ehCacheManager"/>
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehCacheManagerFactory" />
+    </bean>
+    <bean id="ehCacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:cache/ehcache.xml" />
+        <property name="shared" value="false" />
+    </bean>
+
+    <!-- 以下 validator 在使用 mvc:annotation-driven 会 自动注册-->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass"  value="org.hibernate.validator.HibernateValidator"/>
+        <!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="cacheSeconds" value="120"/>
+    </bean>
+    <import resource="database.xml"/>
+    <import resource="redis.xml" />
+    <import resource="mongodb.xml" />
+    <bean id="refProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	    <property name="locations">
+	        <list>
+	            <value>classpath:db.properties</value>
+	            <value>classpath:mongo.properties</value>
+	        </list>
+	    </property>
+	</bean>
+	<!-- location="classpath:db.properties" -->
+	<context:property-placeholder  properties-ref="refProperties" local-override="true"/>
+</beans>

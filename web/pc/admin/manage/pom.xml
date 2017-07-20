@@ -12,6 +12,12 @@
 	<artifactId>dataAnalysis-web-pc-admin-manage</artifactId>
 	<packaging>war</packaging>
 	<dependencies>
+		<!-- modules 相关 -->
+		<dependency>
+			<groupId>com.hejia.dataAnalysis.module</groupId>
+			<artifactId>dataAnalysis-module-auth</artifactId>
+			<version>${project-version}</version>
+		</dependency>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>

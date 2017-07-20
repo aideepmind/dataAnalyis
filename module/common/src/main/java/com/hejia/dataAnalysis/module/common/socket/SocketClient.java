@@ -16,7 +16,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
 import com.hejia.dataAnalysis.module.common.Constant;
-import com.hejia.dataAnalysis.module.common.utils.WeixinTemplateUtil;
+import com.hejia.dataAnalysis.module.common.utils.WeixinTemplateUtils;
 
 /**
  * @Description: 客户端

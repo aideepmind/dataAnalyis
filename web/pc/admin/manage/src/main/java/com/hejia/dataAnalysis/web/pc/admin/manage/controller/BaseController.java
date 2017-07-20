@@ -6,31 +6,22 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import com.hejia.dataAnalysis.module.account.domain.Account;
-import com.hejia.dataAnalysis.module.account.domain.AccountProfile;
-import com.hejia.dataAnalysis.module.account.domain.Role;
 import com.hejia.dataAnalysis.module.common.Constant;
 import com.hejia.dataAnalysis.module.common.CurrentAccount;
 import com.hejia.dataAnalysis.module.common.domain.BaseDomain;
 import com.hejia.dataAnalysis.module.common.domain.JsonpCallback;
 import com.hejia.dataAnalysis.module.common.domain.RequestArg;
-import com.hejia.dataAnalysis.module.common.domain.ResponsePojo;
-import com.hejia.dataAnalysis.module.common.utils.HttpUtil;
-import com.hejia.dataAnalysis.module.common.utils.HttpUtil;
-import com.hejia.dataAnalysis.module.common.utils.SDESUtils;
 
 /**
  * @Description: 
@@ -223,71 +214,6 @@ public class BaseController {
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * @Definition: 登录
-	 * @author: chenyongqiang
-	 * @Date: 2015年6月24日
-	 * @param a
-	 * @param request
-	 * @param response
-	 */
-	public static String login(Account a, HttpServletRequest request, HttpServletResponse response) {
-		CurrentAccount.setCurrentAccount(a, request, Constant.PLATFORM_WEB_STUDENT);
-		String token = a.getMobile() != null ? a.getMobile() : a.getEmail();
-		//加上ip
-		String ip = HttpUtil.getIpAddr(request);
-		token += "|" + ip;
-		try {
-			//在cookie中加入凭证
-			addCookie(response, Constant.COOKIE_LOGIN_TOKEN, token = SDESUtils.encrypt(Constant.COOKIE_DES_KEY, token));
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.info("登录出错，原因：", e);
-		}
-		return token;
-	}
-	
-	/**
-	 * @Definition: 获取跳转的地址
-	 * @author: chenyongqiang
-	 * @Date: 2015年7月31日
-	 * @param step
-	 * @return
-	 */
-	public String getJumpUrl(int step, String token) {
-		String url = Constant.systemUrlWwwStudent + "/dashboard/main";
-		if (step == 1) {
-			url = Constant.systemUrlWwwStudent + "/resume/step1";
-		} else if (step == 2) {
-			url = Constant.systemUrlWwwStudent + "/resume/step2";
-		} else if (step == 4) {
-			url = Constant.systemUrlWwwStudent + "/inviteCode";
-		} else if (step == 21) {
-			url = Constant.systemUrlWwwCompany + "/openService/step1/?TOKEN=" + token;
-		} else if (step == 22) {
-			url = Constant.systemUrlWwwCompany + "/openService/step2/?TOKEN=" + token;
-		} else if (step == 23) {
-			url = Constant.systemUrlWwwCompany + "/openService/step3/?TOKEN=" + token;
-		} else if (step == 31) {
-			url = Constant.systemUrlWwwCompany + "/c/step1/?TOKEN=" + token;
-		} else if (step == 32) {
-			url = Constant.systemUrlWwwCompany + "/c/step2/?TOKEN=" + token;
-		} else if (step == 33) {
-			url = Constant.systemUrlWwwCompany + "/c/step3/?TOKEN=" + token;
-		} else if (step == 34) {
-			url = Constant.systemUrlWwwCompany + "/c/step4/?TOKEN=" + token;
-		} else if (step == 35) {
-			url = Constant.systemUrlWwwCompany + "/c/step5/?TOKEN=" + token;
-		} else if (step == 39) {
-			url = Constant.systemUrlWwwCompany + "/dashboard/main/?TOKEN=" + token;
-		} else if (step == 5) {//求职意向
-			url = Constant.systemUrlWwwStudent + "/resume/intention/";
-		} else if (step == 6 || step == 7) {//基本信息
-			url = Constant.systemUrlWwwStudent + "/resume/basic/";
-		}
-		return url;
 	}
 	
 	/**

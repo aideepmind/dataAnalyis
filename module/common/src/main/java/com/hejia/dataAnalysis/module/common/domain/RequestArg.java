@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+
+import com.hejia.dataAnalysis.module.common.utils.HttpUtils;
 
 /**
  * @Description: 请求参数封装（以后谁要加上方法时，请注意hasEmptyArg属性）
@@ -16,12 +19,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestArg {
 	
-	private Map argMap = null;
-	
-	private boolean hasNotEmptyArg;//是否有空属性，在全部调用之后，可通过该属性来判断参数中是否含有非空值-chenyq
+	private Map argMap;
+	private Map<String, String> cookieMap; // 存放cookie的集合
+	private Map attributeMap; // 目前业务用不着，用到时再添加
+	private String ip;
+	private boolean hasNotEmptyArg; // 是否有空属性，在全部调用之后，可通过该属性来判断参数中是否含有非空值-chenyq
 	
 	public RequestArg() {
 		argMap = new HashMap();
+		cookieMap = new HashMap();
 	}
 
 	public RequestArg(HttpServletRequest request) {
@@ -40,7 +46,17 @@ public class RequestArg {
 	 */
 	public void setArg(HttpServletRequest request) {
 		argMap = new HashMap();
+		cookieMap = new HashMap();
 		argMap.putAll(request.getParameterMap());
+		Cookie cookies[] = request.getCookies();
+		if (cookies != null && cookies.length > 0) {
+			for (int i = 0; i < cookies.length; i++) {
+				Cookie cookie = cookies[i];
+				cookieMap.put(cookie.getName(), cookie.getValue());
+			}
+		}
+		// 设置ip
+		this.setIp(HttpUtils.getIpAddr(request));
 	};
 	
 	/**
@@ -204,7 +220,7 @@ public class RequestArg {
 	}
 
 	/**
-	 * @Definition: 是否有非空值
+	 * @Definition: 是否有非空值，一般跟getXxx方法连着用
 	 * @author: chenyongqiang
 	 * @Date: 2016年5月10日
 	 * @return
@@ -212,10 +228,34 @@ public class RequestArg {
 	public boolean isHasNotEmptyArg() {
 		return hasNotEmptyArg;
 	}
-
+	
+	/**
+	 * @Definition: 
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月18日
+	 * @param hasNotEmptyArg
+	 */
 	public void setHasNotEmptyArg(boolean hasNotEmptyArg) {
 		this.hasNotEmptyArg = hasNotEmptyArg;
 	}
 	
+	/**
+	 * @Definition: 获取cookie值
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月18日
+	 * @param name
+	 * @return
+	 */
+	public String getCookieString(String name) {
+		return cookieMap.get(name);
+	}
+	
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
 	
 }
