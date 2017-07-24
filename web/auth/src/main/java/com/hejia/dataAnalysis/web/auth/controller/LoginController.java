@@ -1,5 +1,7 @@
 package com.hejia.dataAnalysis.web.auth.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,24 +47,29 @@ public class LoginController extends BaseController {
 	 * @author: chenyongqiang
 	 * @Date: 2017年7月17日
 	 * @param request
+	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value = "/doLogin")
 	@ResponseBody
-	public ResponsePojo doLoginForStu(HttpServletRequest request) {
-		System.out.println("--------------------doLogin---------------------------------");
+	public ResponsePojo doLoginForStu(HttpServletRequest request, HttpServletResponse response) {
 		ResponsePojo rp = null;
 		try {
 			// 获取参数
 			RequestArg ra = RequestArg.gteInstance(request);
 			// 登录
 			rp = loginService.login(ra);
+			System.out.println(rp.toJson());
+			if (rp.isSuccess()) {
+				// 把访问凭证写到cookie中
+				this.setAccessToken(response, ra.getInteger("platformType"), ((Map) rp.getMessage()).get("token").toString());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.debug("登录失败，原因是：", e);
 			rp = new ResponsePojo();
-			rp.setFailType("nameError");
-			rp.setFailReason("对不起，登录出错了，请重新尝试");
+			rp.setFailType(ResponsePojo.FAIL_TYPE_UNKNOW_ERROR);
+			rp.setFailReason("对不起，登录出错了，请稍候重试");
 		}
 		return rp;
 	}
@@ -78,22 +85,12 @@ public class LoginController extends BaseController {
 	public ModelAndView login(HttpServletRequest request) {
 		//取客户端类型
 		ModelAndView mv = null;
-//		if (BaseController.getClientType(request) == Constant.CLIENT_TYPE_MOBILE) {//移动端
-//			mv = new ModelAndView("weixin/login");
-//			String unionid = request.getParameter("unionid");
-//			String platform = request.getParameter("platform");
-//			if (unionid != null) {
-//				addSession(request, Constant.SESSION_WEIXIN_UNIONID, unionid);//注：当用户从移动平台过来时，如果是微信端，则一定要带上unionid
-//			}
-//			if (platform != null) {
-//				addSession(request, Constant.SESSION_WEIXIN_PLATFORM, platform);//注：当用户从移动平台过来时，一定要带上platform标识是学生端还是企业端
-//			} else {//考虑到目前（2016.4.21）迷你校的推广在于学生，暂时默认是学生
-//				addSession(request, Constant.SESSION_WEIXIN_PLATFORM, Constant.PLATFORM_MOBILE_STUDENT + "");
-//			}
-//		} else {//默认是pc端
-//			mv = new ModelAndView("www/stu/register3");
-//		}
-//		mv.addObject("redirectUrl", request.getParameter("redirectUrl"));//则登录完之后，跳转到redirectUrl页面
+		if (BaseController.getClientType(request) == Constant.CLIENT_TYPE_MOBILE) { // 移动端
+			mv = new ModelAndView("/login");
+		} else {//默认是pc端
+			mv = new ModelAndView("/login");
+		}
+		mv.addObject("redirectUrl", request.getParameter("redirectUrl")); // 则登录完之后，跳转到redirectUrl页面
 		return mv;
 	};
 	

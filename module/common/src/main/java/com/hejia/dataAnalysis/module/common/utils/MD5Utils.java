@@ -166,9 +166,9 @@ public class MD5Utils {
 	}
 	
 	public static void main(String[] args) throws UnsupportedEncodingException {
-		String pwd = "jd2015";
-		String newpwd = MD5Utils.getEncryptString("123456");
-		System.out.println(newpwd+"--");
+		String pwd = "hejia_123!";
+		String newpwd = MD5Utils.getEncryptString(pwd);
+		System.out.println(newpwd);
 //		
 //		System.out.println(MD5Util.compare("abc123./\\`~_-+@#$%^&*()", newpwd));
 //		String username = "admin";

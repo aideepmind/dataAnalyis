@@ -78,14 +78,12 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		String url = request.getServletPath();
-		System.out.println(url);
 		//判断是否ip属于黑名单
 //		if (isBelongGlobalBlackList(request)) {
 //			return false;
 //		}
 		//判断操作
 		if (isStatic(request, response) || isAccessibleUrl(url) || !isNeedAuthcUrl(url) || isAlreadyLogin(request, response)) return true;
-		System.out.println("---------------------------------------------");
 //		if (isPortal(url)) return true;
 //		if (isAlreadyLogin(request)) if (isAccessibleButNeedAlreadyLoginUrl(url) || isUrlLegal(request)) return true;
 //		if (isAccessibleUrl(url)) return true;

@@ -15,6 +15,8 @@ public class ResponsePojo implements Pojo {
 	private String failReason;
 	private Object message;
 	
+	public final static String FAIL_TYPE_UNKNOW_ERROR = "UNKNOW_ERROR";
+	
 	/**
 	 * 以下是登录相关的
 	 */

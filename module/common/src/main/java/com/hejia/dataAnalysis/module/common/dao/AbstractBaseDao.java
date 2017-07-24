@@ -98,20 +98,6 @@ public abstract class AbstractBaseDao implements BaseDao {
 	}
 
 	/**
-	 * @Definition: 使用原生sql的查总数(使用group by 或者 order by 进行复杂查询时可调用)
-	 * @author: xiachao
-	 * @Date: 2016年10月21日
-	 * @param sql
-	 * @param params
-	 * @return long
-	 */
-	protected long findPositionCount(String sql, Map<String, Object> params) {
-		Query query = getEntityManager().createNativeQuery(sql.toString());
-		setParams(query, params);
-		return ((BigInteger) query.getSingleResult()).longValue();
-	}
-
-	/**
 	 * @Definition: 自定义判空，暂时不用工具类中的静态方法
 	 * @author: chenyongqiang
 	 * @Date: 2015年5月18日
@@ -131,32 +117,6 @@ public abstract class AbstractBaseDao implements BaseDao {
 	 */
 	protected String addLikeFix(String value) {
 		return "%" + value + "%";
-	}
-
-	/**
-	 * @Description:拼接逗号分隔的like 
-	 * @author: liming
-	 * @Date: 2016年9月14日
-	 *	@param filterName
-	 *	@param filterKey
-	 *	@param value
-	 *	@param params
-	 *	@return
-	 */
-	protected String addLikeSplite(String filterName, String filterKey, String value, Map<String, Object> params) {
-		String likeStr = "";
-		if (isNotEmpty(value)) {
-			String[] values = value.split(",");
-			for (int i = 0; i < values.length; i++) {
-				if (isNotEmpty(values[i])) {
-					String tempFilterKey = filterKey + i;
-					likeStr += "or " + filterName + " like :" + tempFilterKey + " ";
-					params.put(tempFilterKey, addLikeFix(values[i]));
-				}
-			}
-		}
-		likeStr = likeStr.length() > 0 ? " and (" + likeStr.substring(2) + ")" : "";
-		return likeStr;
 	}
 
 	/**

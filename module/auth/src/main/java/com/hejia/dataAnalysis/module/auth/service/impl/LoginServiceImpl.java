@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hejia.dataAnalysis.module.account.common.ModuleConfig;
+import com.hejia.dataAnalysis.module.auth.common.ModuleConfig;
 import com.hejia.dataAnalysis.module.account.domain.Account;
 import com.hejia.dataAnalysis.module.account.service.AccountService;
 import com.hejia.dataAnalysis.module.auth.service.LoginService;
@@ -20,7 +20,6 @@ import com.hejia.dataAnalysis.module.common.domain.ResponsePojo;
 import com.hejia.dataAnalysis.module.common.exception.ServiceException;
 import com.hejia.dataAnalysis.module.common.utils.BeanCopyUtils;
 import com.hejia.dataAnalysis.module.common.utils.EhcacheUtils;
-import com.hejia.dataAnalysis.module.common.utils.HttpUtils;
 import com.hejia.dataAnalysis.module.common.utils.MD5Utils;
 import com.hejia.dataAnalysis.module.common.utils.RegexUtils;
 import com.hejia.dataAnalysis.module.common.utils.SDESUtils;
@@ -34,7 +33,7 @@ import com.hejia.dataAnalysis.module.common.utils.SDESUtils;
 @Service("loginService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true, rollbackFor = { Exception.class })
 public class LoginServiceImpl implements LoginService {
-
+	
 	private static final Logger log = Logger.getLogger(LoginServiceImpl.class);
 	
 	@Autowired
@@ -57,12 +56,12 @@ public class LoginServiceImpl implements LoginService {
 		if (rp.isSuccess()) checkVerifyCode(ra, rp);
 		// 登录
 		if (rp.isSuccess()) {
-			if ("pwd".equals(verifyType.trim())) {
+			if (Constant.LOGIN_VERIFY_TYPE_PWD.equalsIgnoreCase((verifyType.trim()))) {
 				doLoginByPwd(ra, rp);
-			} else if ("code".equals(verifyType.trim())) {
+			} else if (Constant.LOGIN_VERIFY_TYPE_CODE.equalsIgnoreCase((verifyType.trim()))) {
 				doLoginByCode(ra, rp);
 			} else {
-				
+				rp.setSuccess(Boolean.FALSE);
 			}
 		}
 		// 获取cookie中的访问token
@@ -118,7 +117,7 @@ public class LoginServiceImpl implements LoginService {
 		// 本质是防止机器暴力破解，机器可以使用的手段包括代理ip、无cookie，机器的目标是破解login_name的密码，所以突破点在于控制login_name的尝试次数 
 		// 使用ip可能导致一个局域网内部的所有用户登录不了，即一人捣蛋，大家完蛋
 		// 一段时间内单ip登录操作的检查
-		String ip = ra.getString("ip");
+		String ip = ra.getIp();
 		Integer times = (Integer) EhcacheUtils.get(EhcacheUtils.LOGIN_SINGLE_IP_FAIL_TIMES, ip);
 		if (times != null) {
 			int maxTimes = ModuleConfig.getInt("login_single_ip_fail_max_times");
@@ -185,8 +184,9 @@ public class LoginServiceImpl implements LoginService {
 		// 6.用户可能利用登录成功来让相关缓存清零，这时便可暴力破解了，只不是中间多了多次登录成功操作。所以建议成功不清除缓存，或者只清除部分缓存，但这样可能造成群体累计失败，即多个用户的失败累计。
 		//   清除跟单个账户相关的
 		// 7.最靠谱的方式是机器学习来判断这些请求的行为特征，会有误差，但是比人为设定阀值好多了，而且机器学习随着数据变多越来越智能
-		String ip = ra.getString("ip");
-		int maxTimes = ModuleConfig.getInt("login_fail_max_times");
+		if (!ModuleConfig.getBoolean("login_fail_show_verify_code")) return;
+		String ip = ra.getIp();
+		int maxTimes = ModuleConfig.getInt("login_fail_show_verify_code_max_times");
 		// 判断是否需要验证码（因为用户可能在多个平台上登录，而所有平台共享一个验证码，所以这个步骤不能忽略，否则可能出现在一个平台上需要验证码，而另外一个平台不需要认证码的情况下，比较验证码）
 		boolean isNeedVerifyCode = false;
 		Integer times = (Integer) EhcacheUtils.get(EhcacheUtils.LOGIN_SINGLE_IP_FAIL_TIMES, ip);
@@ -334,10 +334,11 @@ public class LoginServiceImpl implements LoginService {
 	 * @param rp
 	 */
 	private void getRedirectUrl(RequestArg ra, ResponsePojo rp) {
+		Map<String, Object> message = (Map) rp.getMessage();
 		// 登录成功之后，跳到哪里去，客户端可以指定到哪儿，但还是需要到的那个地方的系统做验证，看是否有权限，否则跳到默认页面
 		String redirectUrl = ra.getString("redirectUrl");
 		if (StringUtils.isNotBlank(redirectUrl)) { // 根据权限范围来决定是否使用该URL，如果不符合，则根据平台使用默认链接
-			// 判断URL格式是否合法
+			/*// 判断URL格式是否合法
 			if (RegexUtils.isURL(redirectUrl)) {
 				// 判断是否属于禾家平台的域名
 				String host = HttpUtils.gethost(redirectUrl);
@@ -346,17 +347,13 @@ public class LoginServiceImpl implements LoginService {
 					String uri = HttpUtils.getUri(redirectUrl);
 					
 				}
-			}
+			}*/
+			message.put("redirectUrl", redirectUrl);
 		}
 		if (StringUtils.isBlank(redirectUrl)) { // 根据平台使用默认链接
-			int platform = ra.getInteger("platform");
-			if (platform == Constant.PLATFORM_ADMIN) {
-				if (rp.isSuccess()) {
-					Map<String, Object> message = (Map) rp.getMessage();
-					message.put("redirectUrl", "");
-				} else {
-					
-				}
+			int platformType = ra.getInteger("platformType");
+			if (platformType == Constant.PLATFORM_ADMIN) {
+				message.put("redirectUrl", Constant.systemUrlAdminManage);
 			}
 		}
 	}
@@ -377,15 +374,15 @@ public class LoginServiceImpl implements LoginService {
 		} else { // 记录登录信息
 			Integer times = (Integer) EhcacheUtils.get(EhcacheUtils.LOGIN_SINGLE_IP_FAIL_TIMES, ip);
 			if (times == null) times = 0;
-			EhcacheUtils.put(EhcacheUtils.LOGIN_SINGLE_IP_FAIL_TIMES, ip, times);
+			EhcacheUtils.put(EhcacheUtils.LOGIN_SINGLE_IP_FAIL_TIMES, ip, ++times);
 			
 			times = (Integer) EhcacheUtils.get(EhcacheUtils.LOGIN_SINGLE_ACCOUNT_FAIL_TIMES, loginName);
 			if (times == null) times = 0;
-			EhcacheUtils.put(EhcacheUtils.LOGIN_SINGLE_ACCOUNT_FAIL_TIMES, loginName, times);
-			
+			EhcacheUtils.put(EhcacheUtils.LOGIN_SINGLE_ACCOUNT_FAIL_TIMES, loginName, ++times);
 			times = (Integer) EhcacheUtils.get(EhcacheUtils.LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES, ip + "#&&#" + loginName);
+			
 			if (times == null) times = 0;
-			EhcacheUtils.put(EhcacheUtils.LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES, ip + "#&&#" + loginName, times);
+			EhcacheUtils.put(EhcacheUtils.LOGIN_SINGLE_IP_ACCOUNT_FAIL_TIMES, ip + "#&&#" + loginName, ++times);
 		}
 	}
 	

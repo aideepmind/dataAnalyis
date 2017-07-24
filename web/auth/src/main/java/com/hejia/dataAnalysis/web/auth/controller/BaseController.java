@@ -210,15 +210,14 @@ public class BaseController {
 	}
 	
 	/**
-	 * @Definition: 设置凭证
+	 * @Definition: 设置访问凭证
 	 * @author: chenyongqiang
-	 * @Date: 2017年7月19日
+	 * @Date: 2017年7月21日
 	 * @param response
 	 * @param platform
 	 * @param token
-	 * @return
 	 */
-	public String setToken(HttpServletResponse response, int platform, String token) {
+	public void setAccessToken(HttpServletResponse response, int platform, String token) {
 		try {
 			//在cookie中加入凭证
 			String cookieName = Constant.COOKIE_ACCESS_TOKEN;
@@ -234,9 +233,8 @@ public class BaseController {
 //			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.info("登录出错，原因：", e);
+			log.info("设置访问凭证出错，原因：", e);
 		}
-		return token;
 	}
 	
 	/**

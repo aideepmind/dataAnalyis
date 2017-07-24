@@ -22,5 +22,10 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+	<dependency>
+		<groupId>com.hejia.dataAnalysis.module</groupId>
+		<artifactId>dataAnalysis-module-common</artifactId>
+		<version>${project-version}</version>
+	</dependency>
   </dependencies>
 </project>

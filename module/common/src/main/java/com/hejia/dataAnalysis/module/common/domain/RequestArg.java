@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.json.JSONObject;
+
 import com.hejia.dataAnalysis.module.common.utils.HttpUtils;
 
 /**
@@ -256,6 +258,10 @@ public class RequestArg {
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+	
+	public String toString() {
+		return JSONObject.fromObject(this).toString();
 	}
 	
 }

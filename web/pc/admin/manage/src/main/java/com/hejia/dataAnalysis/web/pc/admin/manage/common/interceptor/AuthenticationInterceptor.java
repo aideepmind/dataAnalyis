@@ -62,7 +62,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 //		accessMap.put("/", value);
 		
 		//需要登录才能访问的URL
-		needAuthcUrls = new String[] {""};
+		needAuthcUrls = new String[] {"/account", "/report"};
 		
 		//初始化ip黑名单集合
 //		ipBlackListMap = new HashMap<String, Object>();
@@ -89,23 +89,23 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 		//检查token
 		String token = checkToken(request, response);
 		//判断操作
-		if (isOpenUrl(request, response, token) || isAccessibleUrl(url) || !isNeedAuthcUrl(url) || isAlreadyLogin(request, response, token)) return true;
+//		if (isOpenUrl(request, response, token) || isAccessibleUrl(url) || !isNeedAuthcUrl(url) || isAlreadyLogin(request, response, token)) return true;
 //		if (isPortal(url)) return true;
 //		if (isAlreadyLogin(request)) if (isAccessibleButNeedAlreadyLoginUrl(url) || isUrlLegal(request)) return true;
 //		if (isAccessibleUrl(url)) return true;
 		//会话过期操作
-		String requestType = request.getHeader("X-Requested-With");
-		if ("XMLHttpRequest".equals(requestType)) {//ajax（异步）请求
-			//如果session超时
-			response.setHeader("isTimeOut", "true");
-		} else {//同步请求
-			if (Constant.runEnv == 1 || Constant.runEnv == 2) {
-				response.sendRedirect(Constant.systemUrlAuth + "/login");
-			} else {
-				response.sendRedirect(request.getContextPath() + "/login/");
-			}
-		}
-		return false;
+//		String requestType = request.getHeader("X-Requested-With");
+//		if ("XMLHttpRequest".equals(requestType)) {//ajax（异步）请求
+//			//如果session超时
+//			response.setHeader("isTimeOut", "true");
+//		} else {//同步请求
+//			if (Constant.runEnv == 1 || Constant.runEnv == 2) {
+//				response.sendRedirect(Constant.systemUrlAuth + "/login");
+//			} else {
+//				response.sendRedirect(request.getContextPath() + "/login/");
+//			}
+//		}
+		return true;
 	}
 
 	/**

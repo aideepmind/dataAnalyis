@@ -68,6 +68,13 @@ public class Constant {
 	public static int runEnv;
 	
 	/**
+	 * 登录相关
+	 */
+	public static final String LOGIN_VERIFY_TYPE_PWD = "pwd"; // 登录验证类型：密码
+	public static final String LOGIN_VERIFY_TYPE_CODE = "code"; // 登录验证类型：验证码
+	public static final String LOGIN_VERIFY_TYPE_UNION_ID = "unionid"; // 登录验证类型：微信的unionid
+	
+	/**
 	 * 子系统URL
 	 */
 	public static String systemUrlAdminManage;
