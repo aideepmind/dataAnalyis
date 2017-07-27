@@ -28,21 +28,9 @@ public class MongoTest extends WebTestCase {
 	@After
 	public void tearDown() throws Exception {
 	}
-
-	@Test
-	public void test() {
-		try {
-			this.beginAt("position/findByPositionName?positionName=" + URLEncoder.encode("大数据", "utf-8"));
-		} catch (TestingEngineResponseException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		System.out.println("-------------");
-	}
 	
 	@Test
-	public void test2() {
+	public void test() {
 		this.beginAt("position/find");
 		System.out.println("-------------");
 	}

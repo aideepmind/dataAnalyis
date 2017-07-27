@@ -28,7 +28,7 @@
                 <div class="hor-menu  ">
                     <ul class="nav navbar-nav">
                         <li class="menu-dropdown classic-menu-dropdown active">
-                            <a href="javascript:;">首页
+                            <a href="javascript:;">控制台
                                 <span class="arrow"></span>
                             </a>
                         </li>

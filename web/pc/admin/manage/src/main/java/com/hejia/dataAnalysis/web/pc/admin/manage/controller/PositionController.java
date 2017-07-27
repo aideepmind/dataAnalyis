@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hejia.dataAnalysis.module.common.domain.ResponsePojo;
 import com.hejia.dataAnalysis.module.recruitment.domain.Position;
 import com.hejia.dataAnalysis.module.recruitment.service.PositionSerivce;
+import com.hejia.dataAnalysis.module.report.service.CompanyBaseReportService;
 
 /**
  * @Description: 
@@ -25,7 +26,7 @@ import com.hejia.dataAnalysis.module.recruitment.service.PositionSerivce;
 public class PositionController extends BaseController {
 	
 	@Autowired
-	private PositionSerivce service;
+	private CompanyBaseReportService companyBaseReportService;
 	
 	/**
 	 * @Definition: 
@@ -38,15 +39,7 @@ public class PositionController extends BaseController {
 	@RequestMapping(value = "/find")
 	@ResponseBody
 	public ResponsePojo find(HttpServletRequest request, HttpServletResponse response) {
-		ResponsePojo rp = new ResponsePojo();
-		Position position = new Position();
-		position.setPositionName("工程师");
-		position.setCompanyShortName("外迪");
-		position.setCity("北京");
-		position.setApprove(1);
-		List<Position> pList = service.find(position);
-		rp.setMessage(pList);
-		System.out.println(rp.toJson());
-		return rp;
+		companyBaseReportService.BigDataRequirementDivisionByIndustry();
+		return null;
 	}
 }

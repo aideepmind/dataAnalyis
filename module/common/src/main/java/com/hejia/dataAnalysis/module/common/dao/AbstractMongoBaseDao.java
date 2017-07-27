@@ -1,24 +1,25 @@
 package com.hejia.dataAnalysis.module.common.dao;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
-import com.hejia.dataAnalysis.module.common.domain.RequestArg;
 import com.hejia.dataAnalysis.module.common.exception.DaoException;
 import com.hejia.dataAnalysis.module.common.utils.ReflectionUtils;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
 import com.mongodb.QueryBuilder;
 import com.mongodb.WriteResult;
 
@@ -48,8 +49,39 @@ public abstract class AbstractMongoBaseDao<T> implements MongoBaseDao<T> {
 	 * @Date: 2017年7月22日
 	 * @return
 	 */
-	private Class<T> getEntityClass() {
+	protected Class<T> getDomainClass() {
 		return ReflectionUtils.getSuperClassGenricType(getClass());
+	}
+	
+	/**
+	 * @Definition: 
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月25日
+	 * @param domain
+	 * @return
+	 */
+	protected Map<String, Object> domainToMap(T domain) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			Class cls = domain.getClass();
+			Method ms[] = cls.getMethods();
+			for (Method m : ms) {
+				Class mcls[] = m.getParameterTypes();
+				if (mcls != null && mcls.length > 0) continue; // 有返回值
+				String name = m.getName();
+				if (name.startsWith("get")) { // 只要get方法
+					Object value = m.invoke(domain);
+					if (value == null) continue;
+					if (value instanceof String && "".equals(value)) continue;
+					String field = name.substring(3, 4).toLowerCase() + name.substring(4);
+					if("class".equals(field)) continue;
+					map.put(field, value);
+				}					
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
 	}
 	
 	/**
@@ -62,29 +94,16 @@ public abstract class AbstractMongoBaseDao<T> implements MongoBaseDao<T> {
 	protected Query domainToQuery(T domain) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
-		try {
-			Class cls = domain.getClass();
-			Method ms[] = cls.getMethods();
-			Map<String, Object> params = new HashMap<String, Object>(ms.length);
-			for (Method m : ms) {
-				Class mcls[] = m.getParameterTypes();
-				if (mcls != null && mcls.length > 0) continue; // 有返回值
-				String name = m.getName();
-				if (name.startsWith("get")) { // 只要get方法
-					Object value = m.invoke(domain);
-					if (value == null) continue;
-					if (value instanceof String && "".equals(value)) continue;
-					String field = name.substring(3, 4).toLowerCase() + name.substring(4);
-					if("class".equals(field)) continue;
-					if (m.getReturnType() == String.class) {
-						criteria.and(field).regex((String) value); // like
-					} else {
-						criteria.and(field).is(value); // equal
-					}
-				}					
+		Map<String, Object> map = domainToMap(domain);
+		Iterator<String> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			Object value = map.get(key);
+			if (value instanceof String) {
+				criteria.and(key).regex((String) value); // like
+			} else {
+				criteria.and(key).is(value); // equal
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		query.addCriteria(criteria);
 //		System.out.println(query.toString());
@@ -101,36 +120,42 @@ public abstract class AbstractMongoBaseDao<T> implements MongoBaseDao<T> {
 	protected Query domainToQueryMoreQuick(T domain) {
 //		BasicDBList basicDBList = new BasicDBList();
 		QueryBuilder queryBuilder = new QueryBuilder();
-		try {
-			Class cls = domain.getClass();
-			Method ms[] = cls.getMethods();
-			Map<String, Object> params = new HashMap<String, Object>(ms.length);
-			for (Method m : ms) {
-				Class mcls[] = m.getParameterTypes();
-				if (mcls != null && mcls.length > 0) continue; // 有返回值
-				String name = m.getName();
-				if (name.startsWith("get")) { // 只要get方法
-					Object value = m.invoke(domain);
-					if (value == null) continue;
-					if (value instanceof String && "".equals(value)) continue;
-					String field = name.substring(3, 4).toLowerCase() + name.substring(4);
-					if("class".equals(field)) continue;
-					if (m.getReturnType() == String.class) {
-//						BasicDBObject basicDBObject = new BasicDBObject(field, new BasicDBObject("$regex", Pattern.compile("^.*" + value +  ".*$", Pattern.CASE_INSENSITIVE)));
-//						basicDBList.add(basicDBObject);
-						queryBuilder.and(field).regex(Pattern.compile("^.*" + value +  ".*$", Pattern.CASE_INSENSITIVE)); // like
-					} else {
-//						BasicDBObject basicDBObject = new BasicDBObject(field, value);
-//						basicDBList.add(basicDBObject);
-						queryBuilder.and(field).is(value); // equal
-					}
-				}					
+		Map<String, Object> map = domainToMap(domain);
+		Iterator<String> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			Object value = map.get(key);
+			if (value instanceof String) {
+//				BasicDBObject basicDBObject = new BasicDBObject(field, new BasicDBObject("$regex", Pattern.compile("^.*" + value +  ".*$", Pattern.CASE_INSENSITIVE)));
+//				basicDBList.add(basicDBObject);
+				queryBuilder.and(key).regex(Pattern.compile("^.*" + value +  ".*$", Pattern.CASE_INSENSITIVE)); // like
+			} else {
+//				BasicDBObject basicDBObject = new BasicDBObject(field, value);
+//				basicDBList.add(basicDBObject);
+				queryBuilder.and(key).is(value); // equal
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		Query query = new BasicQuery(queryBuilder.get());
 		return query;
+	}
+	
+	/**
+	 * @Definition: 
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月25日
+	 * @param domain
+	 * @return
+	 */
+	protected Update domainToUpdate(T domain) {
+		Update update = new Update();
+		Map<String, Object> map = domainToMap(domain);
+		Iterator<String> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			Object value = map.get(key);
+			update.push(key, value);
+		}
+		return update;
 	}
 	
 	@Override
@@ -146,6 +171,18 @@ public abstract class AbstractMongoBaseDao<T> implements MongoBaseDao<T> {
 	}
 	
 	@Override
+	public Object modifyPartFirst(T queryDomain, T updateDomain) throws DaoException {
+		WriteResult wr = getMongoTemplate().updateFirst(domainToQueryMoreQuick(queryDomain), domainToUpdate(updateDomain), getDomainClass());
+		return wr.getUpsertedId();
+	}
+	
+	@Override
+	public Object modifyPartMulti(T queryDomain, T updateDomain) throws DaoException {
+		WriteResult wr = getMongoTemplate().updateMulti(domainToQueryMoreQuick(queryDomain), domainToUpdate(updateDomain), getDomainClass());
+		return wr.getUpsertedId();
+	}
+	
+	@Override
 	public boolean delete(T domain) throws DaoException {
 		WriteResult wr = getMongoTemplate().remove(domain);
 		return wr.wasAcknowledged();
@@ -153,27 +190,34 @@ public abstract class AbstractMongoBaseDao<T> implements MongoBaseDao<T> {
 	
 	@Override
 	public T findById(ObjectId id) throws DaoException {
-		return getMongoTemplate().findById(id, getEntityClass());
+		return getMongoTemplate().findById(id, getDomainClass());
 	}
 	
 	@Override
 	public List<T> find(T domain) throws DaoException {
-		return getMongoTemplate().find(domainToQueryMoreQuick(domain), getEntityClass());
+		return getMongoTemplate().find(domainToQueryMoreQuick(domain), getDomainClass());
 	}
 	
 	@Override
 	public Page<T> findPage(T domain, PageRequest pr) throws DaoException {
-		return null;
-	}
-	
-	@Override
-	public Page<T> findPageByCondition(RequestArg ra, PageRequest pr) throws DaoException {
-		// TODO Auto-generated method stub
-		return null;
+		Query query = domainToQueryMoreQuick(domain);
+		long count = count(query);
+		if (count == 0) {
+			return new PageImpl<T>(new ArrayList<T>(0), pr, count);
+		}
+		query.skip(pr.getPageNumber() * pr.getPageSize()).limit(pr.getPageSize());
+		List<T> resultList = getMongoTemplate().find(query, getDomainClass());
+		Page<T> page = new PageImpl<T>(resultList, pr, count);
+		return page;
 	}
 	
 	@Override
 	public long count(T domain) throws DaoException {
-		return getMongoTemplate().count(domainToQuery(domain), getEntityClass());
+		return getMongoTemplate().count(domainToQueryMoreQuick(domain), getDomainClass());
+	}
+	
+	@Override
+	public long count(Query query) throws DaoException {
+		return getMongoTemplate().count(query, getDomainClass());
 	}
 }

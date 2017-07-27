@@ -5,6 +5,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.query.Query;
 
 import com.hejia.dataAnalysis.module.common.domain.RequestArg;
 import com.hejia.dataAnalysis.module.common.exception.DaoException;
@@ -36,6 +37,28 @@ public interface MongoBaseDao<T> extends BaseDao {
 	 * @throws DaoException
 	 */
 	public T modify(T domain) throws DaoException;
+	
+	/**
+	 * @Definition: 部分修改，只修改第一条记录
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月25日
+	 * @param queryDomain
+	 * @param updateDomain
+	 * @return
+	 * @throws DaoException
+	 */
+	public Object modifyPartFirst(T queryDomain, T updateDomain) throws DaoException;
+	
+	/**
+	 * @Definition: 部分修改，修改所有符合条件的记录
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月25日
+	 * @param queryDomain
+	 * @param updateDomain
+	 * @return
+	 * @throws DaoException
+	 */
+	public Object modifyPartMulti(T queryDomain, T updateDomain) throws DaoException;
 	
 	/**
 	 * @Definition: 
@@ -79,17 +102,6 @@ public interface MongoBaseDao<T> extends BaseDao {
 	public Page<T> findPage(T domain, PageRequest pr) throws DaoException;
 
 	/**
-	 * @Definition: 分页查找
-	 * @author: chenyongqiang
-	 * @Date: 2017年7月22日
-	 * @param ra
-	 * @param pr
-	 * @return
-	 * @throws DaoException
-	 */
-	public Page<T> findPageByCondition(RequestArg ra, PageRequest pr) throws DaoException;
-	
-	/**
 	 * @Definition: 查找总数
 	 * @author: chenyongqiang
 	 * @Date: 2017年7月22日
@@ -98,4 +110,14 @@ public interface MongoBaseDao<T> extends BaseDao {
 	 * @throws DaoException
 	 */
 	public long count(T domain) throws DaoException;
+
+	/**
+	 * @Definition: 查找总数
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月22日
+	 * @param query
+	 * @return
+	 * @throws DaoException
+	 */
+	public long count(Query query) throws DaoException;
 }

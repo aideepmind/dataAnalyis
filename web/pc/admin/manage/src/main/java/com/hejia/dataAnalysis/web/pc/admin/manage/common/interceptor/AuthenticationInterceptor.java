@@ -62,7 +62,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 //		accessMap.put("/", value);
 		
 		//需要登录才能访问的URL
-		needAuthcUrls = new String[] {"/account", "/report"};
+		needAuthcUrls = new String[] {"/account", "/report", "/dashboard"};
 		
 		//初始化ip黑名单集合
 //		ipBlackListMap = new HashMap<String, Object>();

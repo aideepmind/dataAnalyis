@@ -3,6 +3,7 @@ package com.hejia.dataAnalysis.module.recruitment.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ public class PositionSerivceImpl implements PositionSerivce {
 	}
 	
 	public List<Position> find(Position position) throws ServiceException {
-		return daoImpl.find(position);
+		PageRequest pr = new PageRequest(0, 10);
+		return daoImpl.findPage(position, pr).getContent();
 	}
 }
