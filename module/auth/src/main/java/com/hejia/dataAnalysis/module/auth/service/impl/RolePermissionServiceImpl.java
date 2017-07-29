@@ -2,10 +2,12 @@ package com.hejia.dataAnalysis.module.auth.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hejia.dataAnalysis.module.auth.domain.RolePermission;
 import com.hejia.dataAnalysis.module.auth.service.RolePermissionService;
 import com.hejia.dataAnalysis.module.common.domain.BaseDomain;
 import com.hejia.dataAnalysis.module.common.exception.ServiceException;
@@ -18,27 +20,27 @@ import com.hejia.dataAnalysis.module.common.exception.ServiceException;
  */
 @Service("rolePermissionService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true, rollbackFor = { Exception.class })
-public class RolePermissionServiceImpl implements RolePermissionService {
+public class RolePermissionServiceImpl implements RolePermissionService<RolePermission> {
 
-	public BaseDomain add(BaseDomain domain) throws ServiceException {
+	public RolePermission add(RolePermission domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public BaseDomain modify(BaseDomain domain) throws ServiceException {
+	public RolePermission modify(RolePermission domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public BaseDomain delete(BaseDomain domain) throws ServiceException {
+	public RolePermission delete(RolePermission domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Page<BaseDomain> find(BaseDomain domain, PageRequest pageRequest)
+	public Page<RolePermission> find(RolePermission domain, Pageable p)
 			throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }

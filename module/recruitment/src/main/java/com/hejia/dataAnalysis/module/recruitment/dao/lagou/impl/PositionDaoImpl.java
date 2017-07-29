@@ -27,7 +27,7 @@ public class PositionDaoImpl extends AbstractMongoBaseDao<Position> {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
 	@Override
 	protected MongoTemplate getMongoTemplate() {
 		return mongoTemplate;

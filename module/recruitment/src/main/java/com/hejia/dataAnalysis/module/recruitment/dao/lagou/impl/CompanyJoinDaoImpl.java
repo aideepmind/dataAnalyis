@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperationContext;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.stereotype.Component;
 
 import com.hejia.dataAnalysis.module.recruitment.domain.lagou.CompanyCoreInfo;
 import com.mongodb.BasicDBObject;
@@ -20,6 +21,7 @@ import com.mongodb.DBObject;
  * @Date: 2017年7月29日
  * @version: 1.0
  */
+@Component
 public class CompanyJoinDaoImpl {
 
 	@Autowired

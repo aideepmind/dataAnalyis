@@ -9,6 +9,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ import com.hejia.dataAnalysis.module.common.exception.ServiceException;
  */
 @Service("roleService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true, rollbackFor = { Exception.class })
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements RoleService<Role> {
 	
 	@Autowired
 	private RoleDao dao;
@@ -40,21 +41,21 @@ public class RoleServiceImpl implements RoleService {
 	@Autowired
 	private GroupRoleService groupRoleService;
 	
-	public BaseDomain add(BaseDomain domain) throws ServiceException {
+	public Role add(Role domain) throws ServiceException {
 		return dao.save((Role) domain);
 	}
 
-	public BaseDomain modify(BaseDomain domain) throws ServiceException {
+	public Role modify(Role domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public BaseDomain delete(BaseDomain domain) throws ServiceException {
+	public Role delete(Role domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Page<BaseDomain> find(BaseDomain domain, PageRequest pageRequest)
+	public Page<Role> find(Role domain, Pageable p)
 			throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;

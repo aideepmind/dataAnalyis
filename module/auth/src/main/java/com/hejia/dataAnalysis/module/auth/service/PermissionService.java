@@ -13,7 +13,7 @@ import com.hejia.dataAnalysis.module.common.service.DomainBaseService;
  * @Date: 2017年7月20日
  * @version: 1.0
  */
-public interface PermissionService extends DomainBaseService {
+public interface PermissionService<T> extends DomainBaseService<T> {
 	
 	/**
 	 * @Definition: 根据id的集合查找
@@ -22,7 +22,7 @@ public interface PermissionService extends DomainBaseService {
 	 * @param ids
 	 * @return
 	 */
-	public List<Permission> findByIds(Collection<Integer> ids) throws ServiceException;
+	public List<T> findByIds(Collection<Integer> ids) throws ServiceException;
 	
 	/**
 	 * @Definition: 
@@ -30,7 +30,7 @@ public interface PermissionService extends DomainBaseService {
 	 * @Date: 2015年4月17日
 	 * @return
 	 */
-	public Iterable<Permission> findAll() throws ServiceException;
+	public Iterable<T> findAll() throws ServiceException;
 	
 	/**
 	 * @Definition: 根据账户id查找权限
@@ -40,5 +40,5 @@ public interface PermissionService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<Permission> findByAccId(Integer accId) throws ServiceException;
+	public List<T> findByAccId(Integer accId) throws ServiceException;
 }

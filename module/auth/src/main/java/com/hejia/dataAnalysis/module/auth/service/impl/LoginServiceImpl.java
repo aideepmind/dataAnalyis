@@ -37,7 +37,7 @@ public class LoginServiceImpl implements LoginService {
 	private static final Logger log = Logger.getLogger(LoginServiceImpl.class);
 	
 	@Autowired
-	private AccountService accountService;
+	private AccountService<Account> accountService;
 	
 	public ResponsePojo login(RequestArg ra) throws ServiceException {
 		// 登录设计：

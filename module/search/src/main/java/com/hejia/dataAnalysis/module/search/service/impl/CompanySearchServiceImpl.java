@@ -1,22 +1,11 @@
 package com.hejia.dataAnalysis.module.search.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
-import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -122,7 +111,7 @@ public class CompanySearchServiceImpl implements CompanySearchService {
 	@Autowired
 	private CompanyCoreInfoDao companyCoreInfoDao;
 	@Autowired
-	private CompanyJoinDaoImpl companyJoinDaoImpll;
+	private CompanyJoinDaoImpl companyJoinDaoImpl;
 	@Autowired
 	private OptionService<Option> optionService;
 	
@@ -287,10 +276,10 @@ public class CompanySearchServiceImpl implements CompanySearchService {
 				List<Map> mList = new ArrayList<Map>(dList.size());
 				for (int i = 0; i < dList.size(); i++) {
 					Document d = dList.get(i);
-					int id = Integer.parseInt(d.get("id"));
 					//找公司信息
 					Map<String, Object> m = new HashMap<String, Object>(10);
-					m.put("compId", id);
+					m.put("id", d.get("id"));
+					m.put("compId", d.get("compId"));
 					m.put("logo", d.get("logo"));
 					m.put("companyUrl", d.get("companyUrl"));
 					m.put("trade", d.get("trade"));
@@ -500,15 +489,15 @@ public class CompanySearchServiceImpl implements CompanySearchService {
 			writer = LuceneUtils.getIndexWriter(compListIndex, ikAnalyzer, OpenMode.CREATE);
 			
 			int pages = 0;
-			while (pages < 10) {
-				PageRequest pr = new PageRequest(pages, 500);
+			while (true) {
+				PageRequest pr = new PageRequest(pages++, 500);
 				List<CompanyCoreInfo> companyCoreInfos = companyCoreInfoDao.findAll(pr).getContent();
 				if (!companyCoreInfos.isEmpty()) {
 					List<String> idList = new ArrayList<String>();
 					for (int i = 0; i < companyCoreInfos.size(); i++) {
 						idList.add(companyCoreInfos.get(i).get_id());
 					}
-					List<BasicDBObject> basicDBObjects = companyJoinDaoImpll.findByAllCollection(idList);
+					List<BasicDBObject> basicDBObjects = companyJoinDaoImpl.findByAllCollection(idList);
 					RAMDirectory ramDir = new RAMDirectory();
 					IndexWriter rWriter = LuceneUtils.getIndexWriter(ramDir, ikAnalyzer, OpenMode.CREATE);
 					for (int i = 0; i < basicDBObjects.size(); i++) {
@@ -530,7 +519,6 @@ public class CompanySearchServiceImpl implements CompanySearchService {
 				} else {
 					break;
 				}
-				pages++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -554,37 +542,37 @@ public class CompanySearchServiceImpl implements CompanySearchService {
 		d.add(new StringField("id", p.getPositionId().toString(), Field.Store.YES)); // 索引并存储
 		//d.add(new NumericDocValuesField("idSort", p.getPositionId().intValue())); // 索引并存储
 		d.add(new IntField("compId", p.getCompanyId(), Field.Store.YES)); // 索引并存储
-		d.add(new StoredField("positionName", p.getPositionName())); // 只存储
-		d.add(new StoredField("companyShortName", p.getCompanyShortName())); // 只存储
-		d.add(new StoredField("companyFullName", p.getCompanyFullName())); // 只存储
-		d.add(new StoredField("pDate", p.getCreateTime())); // 只存储
-		d.add(new StringField("city", p.getCity(), Field.Store.YES)); // 索引并存储
+		d.add(new StoredField("positionName", getNotNullString(p.getPositionName()))); // 只存储
+		d.add(new StoredField("companyShortName", getNotNullString(p.getCompanyShortName()))); // 只存储
+		d.add(new StoredField("companyFullName", getNotNullString(p.getCompanyFullName()))); // 只存储
+		d.add(new StoredField("pDate", getNotNullString(p.getCreateTime()))); // 只存储
+		d.add(new StringField("city", getNotNullString(p.getCity()), Field.Store.YES)); // 索引并存储
 		//经验
-		d.add(new TextField("experience", p.getWorkYear(), Field.Store.YES)); // 索引并存储
+		d.add(new TextField("experience", getNotNullString(p.getWorkYear()), Field.Store.YES)); // 索引并存储
 		//学历
-		d.add(new StringField("degree", p.getEducation(), Field.Store.YES)); // 索引并存储
+		d.add(new StringField("degree", getNotNullString(p.getEducation()), Field.Store.YES)); // 索引并存储
 		//行业
-		d.add(new TextField("trade", p.getIndustryField(), Field.Store.YES)); // 索引并存储
+		d.add(new TextField("trade", getNotNullString(p.getIndustryField()), Field.Store.YES)); // 索引并存储
 		//工作性质
-		d.add(new StringField("workType", p.getJobNature(), Field.Store.YES)); // 索引并存储
-		d.add(new TextField("salary", p.getSalary(), Field.Store.YES)); // 索引并存储
+		d.add(new StringField("workType", getNotNullString(p.getJobNature()), Field.Store.YES)); // 索引并存储
+		d.add(new TextField("salary", getNotNullString(p.getSalary()), Field.Store.YES)); // 索引并存储
 		
 		
 		StringBuilder b = new StringBuilder();
-		b.append(p.getPositionName()).append(DELIMITER);
-		b.append(p.getCity()).append(DELIMITER);
-		b.append(p.getEducation()).append(DELIMITER);
-		b.append(p.getWorkYear()).append(DELIMITER);
-		b.append(p.getJobNature()).append(DELIMITER);
-		b.append(p.getSalary()).append(DELIMITER);
-		b.append(p.getCompanyFullName()).append(DELIMITER);
-		b.append(p.getCompanyShortName()).append(DELIMITER);
-		b.append(p.getDistrict()).append(DELIMITER);
-		b.append(p.getFinanceStage()).append(DELIMITER);
-		b.append(p.getIndustryField()).append(DELIMITER);
-		b.append(p.getSecondType()).append(DELIMITER);
-		b.append(p.getCompanySize()).append(DELIMITER);
-		b.append(p.getPositionAdvantage());
+		b.append(getNotNullString(p.getPositionName())).append(DELIMITER);
+		b.append(getNotNullString(p.getCity())).append(DELIMITER);
+		b.append(getNotNullString(p.getEducation())).append(DELIMITER);
+		b.append(getNotNullString(p.getWorkYear())).append(DELIMITER);
+		b.append(getNotNullString(p.getJobNature())).append(DELIMITER);
+		b.append(getNotNullString(p.getSalary())).append(DELIMITER);
+		b.append(getNotNullString(p.getCompanyFullName())).append(DELIMITER);
+		b.append(getNotNullString(p.getCompanyShortName())).append(DELIMITER);
+		b.append(getNotNullString(p.getDistrict())).append(DELIMITER);
+		b.append(getNotNullString(p.getFinanceStage())).append(DELIMITER);
+		b.append(getNotNullString(p.getIndustryField())).append(DELIMITER);
+		b.append(getNotNullString(p.getSecondType())).append(DELIMITER);
+		b.append(getNotNullString(p.getCompanySize())).append(DELIMITER);
+		b.append(getNotNullString(p.getPositionAdvantage()));
 		
 		d.add(new TextField("content", b.toString(), Field.Store.NO));//索引并存储，主要下面还要用到，并且数据量不是很大
 		
@@ -627,32 +615,43 @@ public class CompanySearchServiceImpl implements CompanySearchService {
 		StringBuilder b = new StringBuilder(); // 暂时只要名称作为公司的搜索条件，后期可以加上例如500强之类的关键字作为条件
 		d.add(new StringField("id", _id, Field.Store.YES)); // 索引并存储
 //		d.add(new NumericDocValuesField("idSort", a.getAccId())); // 排序		
-		d.add(new StoredField("companyName", companyName)); // 只存储	
-		d.add(new StoredField("companyShortName", companyShortName)); // 只存储
-		d.add(new StoredField("logo", StringUtils.isBlank(logo) ? "" : logo)); // 只存储
-		d.add(new StoredField("companyUrl", companyUrl)); // 只存储
-		d.add(new StoredField("trade", industryField)); // 只存储
-		d.add(new StoredField("city", city)); // 只存储
-		d.add(new StoredField("companyIntroduce", companyIntroduce)); // 只存储
+		d.add(new StoredField("companyName", getNotNullString(companyName))); // 只存储	
+		d.add(new StoredField("companyShortName", getNotNullString(companyShortName))); // 只存储
+		d.add(new StoredField("logo", getNotNullString(logo))); // 只存储
+		d.add(new StoredField("companyUrl", getNotNullString(companyUrl))); // 只存储
+		d.add(new StoredField("trade", getNotNullString(industryField))); // 只存储
+		d.add(new StoredField("city", getNotNullString(city))); // 只存储
+		d.add(new StoredField("companyIntroduce", getNotNullString(companyIntroduce))); // 只存储
 		
-		b.append(companyName).append(DELIMITER);
-		b.append(companyShortName).append(DELIMITER);
-		b.append(companyIntroduce).append(DELIMITER);
-		b.append(companySize).append(DELIMITER);
-		b.append(industryField).append(DELIMITER);
-		b.append(city).append(DELIMITER);
-		b.append(financeStage).append(DELIMITER);
-		b.append(province).append(DELIMITER);
-		b.append(district).append(DELIMITER);
-		b.append(leaderName).append(DELIMITER);
-		b.append(leaderPosition).append(DELIMITER);
-		b.append(product).append(DELIMITER);
-		b.append(productprofile).append(DELIMITER);
-		b.append(companyProfile);
+		b.append(getNotNullString(companyName)).append(DELIMITER);
+		b.append(getNotNullString(companyShortName)).append(DELIMITER);
+		b.append(getNotNullString(companyIntroduce)).append(DELIMITER);
+		b.append(getNotNullString(companySize)).append(DELIMITER);
+		b.append(getNotNullString(industryField)).append(DELIMITER);
+		b.append(getNotNullString(city)).append(DELIMITER);
+		b.append(getNotNullString(financeStage)).append(DELIMITER);
+		b.append(getNotNullString(province)).append(DELIMITER);
+		b.append(getNotNullString(district)).append(DELIMITER);
+		b.append(getNotNullString(leaderName)).append(DELIMITER);
+		b.append(getNotNullString(leaderPosition)).append(DELIMITER);
+		b.append(getNotNullString(product)).append(DELIMITER);
+		b.append(getNotNullString(productprofile)).append(DELIMITER);
+		b.append(getNotNullString(companyProfile));
 
 		d.add(new TextField("content", b.toString(), Field.Store.NO)); // 索引并存储，主要下面还要用到，并且数据量不是很大
 		
 		return d;
+	}
+	
+	/**
+	 * @Definition: 
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月29日
+	 * @param str
+	 * @return
+	 */
+	private String getNotNullString(String str) {
+		return str == null ? "" : str;
 	}
 	
 	/**

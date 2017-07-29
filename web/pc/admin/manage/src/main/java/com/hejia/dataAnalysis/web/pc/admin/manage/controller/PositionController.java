@@ -1,11 +1,13 @@
 package com.hejia.dataAnalysis.web.pc.admin.manage.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -44,9 +46,11 @@ public class PositionController extends BaseController {
 	@ResponseBody
 	public ResponsePojo find(HttpServletRequest request, HttpServletResponse response) {
 		RequestArg ra = new RequestArg();
-		ra.set("kw", "拉勾");
+		ra.set("kw", "dashuju");
 		Pageable p = new PageRequest(0, 15);
-		companySearchService.searchCompany(ra, p);
+		Page<Map> page = companySearchService.searchCompany(ra, p);
+		System.out.println(page.getContent().size());
+		System.out.println(page.getContent());
 		return null;
 	}
 }

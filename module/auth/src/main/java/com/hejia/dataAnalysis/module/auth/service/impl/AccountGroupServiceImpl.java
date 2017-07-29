@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,28 +25,28 @@ import com.hejia.dataAnalysis.module.common.exception.ServiceException;
  */
 @Service("accountGroupService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true, rollbackFor = { Exception.class })
-public class AccountGroupServiceImpl implements AccountGroupService {
+public class AccountGroupServiceImpl implements AccountGroupService<AccountGroup> {
 	
 	@Autowired
 	private AccountGroupDao dao;
 	
 	@Transactional(readOnly = false)
-	public BaseDomain add(BaseDomain domain) throws ServiceException {
+	public AccountGroup add(AccountGroup domain) throws ServiceException {
 		return dao.save((AccountGroup) domain);
 	}
 
 	@Transactional(readOnly = false)
-	public BaseDomain modify(BaseDomain domain) throws ServiceException {
+	public AccountGroup modify(AccountGroup domain) throws ServiceException {
 		return dao.save((AccountGroup) domain);
 	}
 
 	@Transactional(readOnly = false)
-	public BaseDomain delete(BaseDomain domain) throws ServiceException {
+	public AccountGroup delete(AccountGroup domain) throws ServiceException {
 		dao.delete((AccountGroup) domain);
 		return domain;
 	}
 
-	public Page find(BaseDomain domain, PageRequest pageRequest) throws ServiceException {
+	public Page<AccountGroup> find(AccountGroup domain, Pageable p) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}

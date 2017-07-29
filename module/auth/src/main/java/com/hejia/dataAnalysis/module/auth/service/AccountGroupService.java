@@ -13,7 +13,7 @@ import com.hejia.dataAnalysis.module.common.service.DomainBaseService;
  * @Date: 2016年4月29日
  * @version: 1.0
  */
-public interface AccountGroupService extends DomainBaseService {
+public interface AccountGroupService<T> extends DomainBaseService<T> {
 	
 	/**
 	 * @Definition: 
@@ -32,7 +32,7 @@ public interface AccountGroupService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<AccountGroup> findByAccId(Integer accId) throws ServiceException;
+	public List<T> findByAccId(Integer accId) throws ServiceException;
 	
 	/**
 	 * @Definition: 
@@ -42,7 +42,7 @@ public interface AccountGroupService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<AccountGroup> findByGroupId(Integer groupId) throws ServiceException;
+	public List<T> findByGroupId(Integer groupId) throws ServiceException;
 	
 	/**
 	 * @Definition: 
@@ -53,7 +53,7 @@ public interface AccountGroupService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<AccountGroup> findByAccIdAndGroupId(Integer accId, Integer groupId) throws ServiceException;
+	public List<T> findByAccIdAndGroupId(Integer accId, Integer groupId) throws ServiceException;
 	
 	/**
 	 * @Definition: 

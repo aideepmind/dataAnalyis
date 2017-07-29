@@ -13,7 +13,7 @@ import com.hejia.dataAnalysis.module.common.service.DomainBaseService;
  * @Date: 2015年4月10日
  * @version: 1.0
  */
-public interface RoleService extends DomainBaseService {
+public interface RoleService<T> extends DomainBaseService<T> {
 	
 	/**
 	 * @Definition: 
@@ -22,7 +22,7 @@ public interface RoleService extends DomainBaseService {
 	 * @param ids
 	 * @return
 	 */
-	public List<Role> findByIds(Collection<Integer> ids);
+	public List<T> findByIds(Collection<Integer> ids);
 	
 	/**
 	 * @Definition: 
@@ -31,7 +31,7 @@ public interface RoleService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public Iterable<Role> findAll() throws ServiceException;
+	public Iterable<T> findAll() throws ServiceException;
 	
 	/**
 	 * @Definition: 根据账户id查找角色
@@ -41,5 +41,5 @@ public interface RoleService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<Role> findByAccId(Integer accId) throws ServiceException;
+	public List<T> findByAccId(Integer accId) throws ServiceException;
 }

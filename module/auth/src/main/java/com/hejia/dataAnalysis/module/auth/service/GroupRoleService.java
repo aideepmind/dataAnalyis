@@ -13,7 +13,7 @@ import com.hejia.dataAnalysis.module.common.service.DomainBaseService;
  * @Date: 2016年4月29日
  * @version: 1.0
  */
-public interface GroupRoleService extends DomainBaseService {
+public interface GroupRoleService<T> extends DomainBaseService<T> {
 	
 	/**
 	 * @Definition: 
@@ -23,7 +23,7 @@ public interface GroupRoleService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<GroupRole> findByGroupId(Integer gId) throws ServiceException;
+	public List<T> findByGroupId(Integer gId) throws ServiceException;
 	
 	/**
 	 * @Definition: 
@@ -33,7 +33,7 @@ public interface GroupRoleService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<GroupRole> findByRoleId(Integer rId) throws ServiceException;
+	public List<T> findByRoleId(Integer rId) throws ServiceException;
 	
 	/**
 	 * @Definition: 
@@ -43,7 +43,7 @@ public interface GroupRoleService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<GroupRole> findByGroupIds(Collection<Integer> ids) throws ServiceException;
+	public List<T> findByGroupIds(Collection<Integer> ids) throws ServiceException;
 	
 	/**
 	 * @Definition: 
@@ -53,6 +53,6 @@ public interface GroupRoleService extends DomainBaseService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	public List<GroupRole> findByRoleIds(Collection<Integer> ids) throws ServiceException;
+	public List<T> findByRoleIds(Collection<Integer> ids) throws ServiceException;
 	
 }

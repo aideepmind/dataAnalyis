@@ -9,6 +9,6 @@ import com.hejia.dataAnalysis.module.common.service.DomainBaseService;
  * @Date: 2016年4月29日
  * @version: 1.0
  */
-public interface RolePermissionService extends DomainBaseService {
+public interface RolePermissionService<T> extends DomainBaseService<T> {
 	
 }

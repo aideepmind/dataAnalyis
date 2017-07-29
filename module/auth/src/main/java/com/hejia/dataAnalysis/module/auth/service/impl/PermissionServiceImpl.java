@@ -9,6 +9,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ import com.hejia.dataAnalysis.module.common.exception.ServiceException;
  */
 @Service("permissionService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true, rollbackFor = { Exception.class })
-public class PermissionServiceImpl implements PermissionService {
+public class PermissionServiceImpl implements PermissionService<Permission> {
 	
 	@Autowired
 	private PermissionDao dao;
@@ -42,22 +43,22 @@ public class PermissionServiceImpl implements PermissionService {
 	@Autowired
 	private RolePermissionService rolePermissionService;
 	
-	public BaseDomain add(BaseDomain domain) throws ServiceException {
+	public Permission add(Permission domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public BaseDomain modify(BaseDomain domain) throws ServiceException {
+	public Permission modify(Permission domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public BaseDomain delete(BaseDomain domain) throws ServiceException {
+	public Permission delete(Permission domain) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Page<BaseDomain> find(BaseDomain domain, PageRequest pageRequest) throws ServiceException {
+	public Page<Permission> find(Permission domain, Pageable p) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
