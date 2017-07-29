@@ -85,6 +85,36 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="page-content-inner">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="portlet light ">
+                                        <div class="portlet-title">
+                                            <div class="caption ">
+                                                <span class="caption-subject font-dark bold uppercase">大数据需求分析报表</span>
+                                                <span class="caption-helper">按行业划分</span>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div id="dashboard_chart_3" class="CSSAnimationChart"  style="overflow: hidden;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="portlet light ">
+                                        <div class="portlet-title">
+                                            <div class="caption ">
+                                                <span class="caption-subject font-dark bold uppercase">大数据需求分析报表</span>
+                                                <span class="caption-helper">按公司规模划分</span>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div id="dashboard_chart_4" class="CSSAnimationChart"  style="overflow: hidden;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- END PAGE CONTENT INNER -->
                     </div>
                 </div>
@@ -107,6 +137,7 @@
 					'common': 'js/common',
 					'dashboard': 'js/dashboard',
 			        'theme': 'lib/echarts/theme',
+			        'map': 'lib/echarts/map'
 				},
 				packages: [{
 		               main: 'echarts',

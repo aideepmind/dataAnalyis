@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.hejia.dataAnalysis.module.common.utils.EhcacheUtils;
+import com.hejia.dataAnalysis.module.search.service.CompanySearchService;
 import com.hejia.dataAnalysis.web.pc.admin.manage.common.interceptor.AuthenticationInterceptor;
 
 /**
@@ -22,10 +23,11 @@ public class SystemInitialize {
 	
 	@Autowired
 	private AuthenticationInterceptor authenticationInterceptor;
-
 	@Autowired
 	@Qualifier("ehCacheManagerFactory")
 	private CacheManager manager;
+	@Autowired
+	private CompanySearchService companySearchService;
 	
 	@PostConstruct
 	private void init() {
@@ -33,5 +35,7 @@ public class SystemInitialize {
 		authenticationInterceptor.init();
 		// 初始化缓存工具类
 		EhcacheUtils.init(manager);
+		// 初始化搜索引擎
+		companySearchService.init();
 	}
 }

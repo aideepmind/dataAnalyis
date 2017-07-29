@@ -66,6 +66,9 @@ public class Constant {
 	 * 项目部署的环境（主要作用是防止一些误操作和性能上的考虑）
 	 */
 	public static int runEnv;
+	public static boolean debug;
+	public static String version;
+	
 	
 	/**
 	 * 登录相关
@@ -81,6 +84,10 @@ public class Constant {
 	public static String systemUrlAuth;
 	
 	static {
+		runEnv = ModuleConfig.getInt("run_env");
+		debug = ModuleConfig.getBoolean("debug");
+		version = ModuleConfig.get("version");
+		
 		if (runEnv == 1) {//生产环境
 			systemUrlAdminManage = ModuleConfig.get("system_url_admin_manage");
 			systemUrlAuth = ModuleConfig.get("system_url_auth");

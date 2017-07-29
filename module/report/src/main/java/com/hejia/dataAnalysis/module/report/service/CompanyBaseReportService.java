@@ -30,4 +30,13 @@ public interface CompanyBaseReportService extends BaseService {
 	 */
 	public ResponsePojo BigDataRequirementDivisionByCompanySize() throws ServiceException;
 	
+	/**
+	 * @Definition: 按地区划分有大数据需求的公司报表
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月25日
+	 * @return
+	 * @throws ServiceException
+	 */
+	public ResponsePojo BigDataRequirementDivisionByCity() throws ServiceException;
+	
 }

@@ -6,14 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hejia.dataAnalysis.module.common.domain.RequestArg;
 import com.hejia.dataAnalysis.module.common.domain.ResponsePojo;
-import com.hejia.dataAnalysis.module.recruitment.domain.Position;
-import com.hejia.dataAnalysis.module.recruitment.service.PositionSerivce;
-import com.hejia.dataAnalysis.module.report.service.CompanyBaseReportService;
+import com.hejia.dataAnalysis.module.recruitment.service.lagou.PositionService;
+import com.hejia.dataAnalysis.module.search.service.CompanySearchService;
 
 /**
  * @Description: 
@@ -26,7 +28,9 @@ import com.hejia.dataAnalysis.module.report.service.CompanyBaseReportService;
 public class PositionController extends BaseController {
 	
 	@Autowired
-	private CompanyBaseReportService companyBaseReportService;
+	private PositionService positionSerivce;
+	@Autowired
+	private CompanySearchService companySearchService;
 	
 	/**
 	 * @Definition: 
@@ -39,7 +43,10 @@ public class PositionController extends BaseController {
 	@RequestMapping(value = "/find")
 	@ResponseBody
 	public ResponsePojo find(HttpServletRequest request, HttpServletResponse response) {
-		companyBaseReportService.BigDataRequirementDivisionByIndustry();
+		RequestArg ra = new RequestArg();
+		ra.set("kw", "拉勾");
+		Pageable p = new PageRequest(0, 15);
+		companySearchService.searchCompany(ra, p);
 		return null;
 	}
 }

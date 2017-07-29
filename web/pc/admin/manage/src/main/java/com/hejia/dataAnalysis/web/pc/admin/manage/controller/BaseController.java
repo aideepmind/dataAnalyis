@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.hejia.dataAnalysis.module.account.domain.Account;
 import com.hejia.dataAnalysis.module.common.Constant;
@@ -41,7 +42,7 @@ public class BaseController {
 	 * @param request
 	 * @return
 	 */
-	protected PageRequest getPageRequest(HttpServletRequest request) {
+	protected Pageable getPageRequest(HttpServletRequest request) {
 		String pn = request.getParameter("pn"), pageSize = request.getParameter("pageSize");
 		int page = 0, size = 10;//默认
 		if (pn != null && !"".equals(pn)) {

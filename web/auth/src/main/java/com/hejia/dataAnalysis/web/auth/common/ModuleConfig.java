@@ -15,7 +15,7 @@ public class ModuleConfig {
 	
 	static {
 		try {
-			pro.load(ModuleConfig.class.getClassLoader().getResourceAsStream("web-auth.properties"));
+			pro.load(ModuleConfig.class.getClassLoader().getResourceAsStream("web-common.properties"));
 			Properties pro2 = new Properties();
 			pro2.load(ModuleConfig.class.getClassLoader().getResourceAsStream("weixin.properties"));
 			pro.putAll(pro2);

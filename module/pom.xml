@@ -26,6 +26,7 @@
     <module>report</module>
     <module>crm</module>
     <module>auth</module>
+    <module>search</module>
   </modules>
   <dependencies>
 		<dependency>

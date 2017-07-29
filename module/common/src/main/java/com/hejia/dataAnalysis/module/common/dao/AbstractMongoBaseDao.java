@@ -20,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import com.hejia.dataAnalysis.module.common.exception.DaoException;
 import com.hejia.dataAnalysis.module.common.utils.ReflectionUtils;
+import com.mongodb.BasicDBList;
 import com.mongodb.QueryBuilder;
 import com.mongodb.WriteResult;
 
@@ -126,17 +127,18 @@ public abstract class AbstractMongoBaseDao<T> implements MongoBaseDao<T> {
 			String key = it.next();
 			Object value = map.get(key);
 			if (value instanceof String) {
-//				BasicDBObject basicDBObject = new BasicDBObject(field, new BasicDBObject("$regex", Pattern.compile("^.*" + value +  ".*$", Pattern.CASE_INSENSITIVE)));
+//				BasicDBObject basicDBObject = new BasicDBObject(key, new BasicDBObject("$regex", Pattern.compile("^.*" + value +  ".*$", Pattern.CASE_INSENSITIVE)));
 //				basicDBList.add(basicDBObject);
 				queryBuilder.and(key).regex(Pattern.compile("^.*" + value +  ".*$", Pattern.CASE_INSENSITIVE)); // like
 			} else {
-//				BasicDBObject basicDBObject = new BasicDBObject(field, value);
+//				BasicDBObject basicDBObject = new BasicDBObject(key, value);
 //				basicDBList.add(basicDBObject);
 				queryBuilder.and(key).is(value); // equal
 			}
 		}
 		Query query = new BasicQuery(queryBuilder.get());
 		return query;
+		
 	}
 	
 	/**

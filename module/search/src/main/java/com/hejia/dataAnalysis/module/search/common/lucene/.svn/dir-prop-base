@@ -1,0 +1,21 @@
+K 10
+svn:ignore
+V 142
+.idea
+.project
+.settings
+classes
+test-classes
+*.lauch
+m2e-wtp
+*.class
+*.iml
+*.bak
+*.exe
+*.db
+*.tmp
+*.classpath
+*.launch
+.externalToolBuilders
+
+END

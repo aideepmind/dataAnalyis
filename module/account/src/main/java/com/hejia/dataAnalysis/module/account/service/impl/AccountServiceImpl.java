@@ -23,18 +23,18 @@ import com.hejia.dataAnalysis.module.common.exception.ServiceException;
  */
 @Service("accountService")
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true, rollbackFor = { Exception.class })
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements AccountService<Account> {
 	
 	@Autowired
 	private AccountDao dao;
 	
 	@Transactional(readOnly = false)
-	public BaseDomain add(BaseDomain domain) throws ServiceException {
-		return dao.save((Account) domain);
+	public Account add(Account domain) throws ServiceException {
+		return dao.save(domain);
 	}
 	
 	@Transactional(readOnly = false)
-	public BaseDomain modify(BaseDomain domain) throws ServiceException {
+	public Account modify(Account domain) throws ServiceException {
 		return dao.save((Account) domain);
 	}
 	
@@ -42,19 +42,17 @@ public class AccountServiceImpl implements AccountService {
 	 * 可以只做逻辑删除
 	 */
 	@Transactional(readOnly = false)
-	public BaseDomain delete(BaseDomain domain) throws ServiceException {
+	public Account delete(Account domain) throws ServiceException {
 		// 逻辑删除
 		// a.setStatus(Constant.ACCOUNT_STATUS_DELETED);
 		// 删除账号之前应该清理账号相关的数据
 		
-		Account a = (Account) domain;
-		a = dao.findOne(a.getAccId());
-		dao.delete(a);
-		return a;
+		domain = dao.findOne(domain.getAccId());
+		dao.delete(domain);
+		return domain;
 	}
 
-	public Page<BaseDomain> find(BaseDomain domain, PageRequest pageRequest)
-			throws ServiceException {
+	public Page<Account> find(Account domain, PageRequest pageRequest) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}

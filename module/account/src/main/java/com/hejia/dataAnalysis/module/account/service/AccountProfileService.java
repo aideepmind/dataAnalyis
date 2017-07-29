@@ -8,6 +8,6 @@ import com.hejia.dataAnalysis.module.common.service.DomainBaseService;
  * @Date: 2017年7月16日
  * @version: 1.0
  */
-public interface AccountProfileService extends DomainBaseService {
+public interface AccountProfileService<T> extends DomainBaseService<T> {
 	
 }

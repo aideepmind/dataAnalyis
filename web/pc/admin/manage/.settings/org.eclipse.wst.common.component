@@ -11,6 +11,9 @@
         <dependent-module archiveName="dataAnalysis-module-recruitment-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dataAnalysis-module-recruitment/dataAnalysis-module-recruitment">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="dataAnalysis-module-report-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dataAnalysis-module-report/dataAnalysis-module-report">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dataAnalysis-module-common-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/dataAnalysis-module-common/dataAnalysis-module-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>

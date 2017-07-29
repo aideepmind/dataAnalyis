@@ -79,6 +79,19 @@ public class DashboardController {
 	}
 	
 	/**
+	 * @Definition: 
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月27日
+	 * @return
+	 */
+	@RequestMapping(value = "/BigDataRequirementDivisionByCity", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponsePojo BigDataRequirementDivisionByCity() {
+		ResponsePojo rp = companyBaseReportService.BigDataRequirementDivisionByCity();
+		return rp;
+	}
+	
+	/**
 	 * @Definition: 获取用户的权限
 	 * @author: chenyongqiang
 	 * @Date: 2015年4月20日

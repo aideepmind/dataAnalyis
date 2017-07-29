@@ -29,6 +29,11 @@
 			<version>${project-version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.hejia.dataAnalysis.module</groupId>
+			<artifactId>dataAnalysis-module-search</artifactId>
+			<version>${project-version}</version>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
 			<version>2.2.3</version>

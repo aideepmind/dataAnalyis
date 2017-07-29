@@ -14,11 +14,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hejia.dataAnalysis.module.common.domain.ResponsePojo;
+import com.hejia.dataAnalysis.module.common.domain.chart.MapSeries;
 import com.hejia.dataAnalysis.module.common.domain.chart.Option;
 import com.hejia.dataAnalysis.module.common.domain.chart.Series;
 import com.hejia.dataAnalysis.module.common.domain.chart.SeriesData;
 import com.hejia.dataAnalysis.module.common.exception.ServiceException;
-import com.hejia.dataAnalysis.module.recruitment.dao.impl.CompanyBaseInfoDaoImpl;
+import com.hejia.dataAnalysis.module.common.utils.LocationUtils;
+import com.hejia.dataAnalysis.module.recruitment.dao.lagou.impl.CompanyBaseInfoDaoImpl;
 import com.hejia.dataAnalysis.module.report.service.CompanyBaseReportService;
 import com.mongodb.BasicDBObject;
 
@@ -37,11 +39,11 @@ public class CompanyBaseReportServiceImpl implements CompanyBaseReportService {
 	
 	public ResponsePojo BigDataRequirementDivisionByIndustry() throws ServiceException {
 		ResponsePojo rp = new ResponsePojo(Boolean.TRUE);
-		int showSize = 10;
+		int showSize = 15;
 		try {
 			List<BasicDBObject> basicDBObjects = companyBaseInfoDaoImpl.groupByIndustryField2();
 //			System.out.println(basicDBObjects);
-			basicDBObjects = secondHandle(basicDBObjects);
+			basicDBObjects = industrySecondHandle(basicDBObjects);
 			Series series = new Series(Series.TYPE_PIE, "公司数量");
 			SeriesData otherSeriesData = new SeriesData("其他", 0);
 			for (int i = 0; i < basicDBObjects.size(); i++) {
@@ -70,7 +72,7 @@ public class CompanyBaseReportServiceImpl implements CompanyBaseReportService {
 	 * @param basicDBObjects
 	 * @return
 	 */
-	private List<BasicDBObject> secondHandle(List<BasicDBObject> basicDBObjects) {
+	private List<BasicDBObject> industrySecondHandle(List<BasicDBObject> basicDBObjects) {
 		Map<String, BasicDBObject> temp = new HashMap<String, BasicDBObject>();
 		for (int i = 0; i < basicDBObjects.size(); i++) {
 			BasicDBObject basicDBObject = basicDBObjects.get(i);
@@ -110,7 +112,6 @@ public class CompanyBaseReportServiceImpl implements CompanyBaseReportService {
 		ResponsePojo rp = new ResponsePojo(Boolean.TRUE);
 		try {
 			List<BasicDBObject> basicDBObjects = companyBaseInfoDaoImpl.groupByCompanySize();
-			basicDBObjects = secondHandle(basicDBObjects);
 			Series series = new Series(Series.TYPE_PIE, "公司数量");
 			for (int i = 0; i < basicDBObjects.size(); i++) {
 				BasicDBObject basicDBObject = basicDBObjects.get(i);
@@ -124,5 +125,65 @@ public class CompanyBaseReportServiceImpl implements CompanyBaseReportService {
 			throw new ServiceException(e);
 		}
 		return rp;
+	}
+	
+	public ResponsePojo BigDataRequirementDivisionByCity() throws ServiceException {
+		ResponsePojo rp = new ResponsePojo(Boolean.TRUE);
+		try {
+			List<BasicDBObject> basicDBObjects = companyBaseInfoDaoImpl.groupBycity();
+			basicDBObjects = citySecondHandle(basicDBObjects);
+			MapSeries series = new MapSeries(Series.TYPE_MAP, "公司数量", MapSeries.MAP_CHINA);
+			for (int i = 0; i < basicDBObjects.size(); i++) {
+				BasicDBObject basicDBObject = basicDBObjects.get(i);
+				series.add(new SeriesData(basicDBObject.getString("_id"), basicDBObject.get("count")));
+			}
+			Option option = new Option();
+			option.addSeries(series);
+			rp.setMessage(option);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException(e);
+		}
+		return rp;
+	}
+	
+	/**
+	 * @Definition: 二次处理
+	 * @author: chenyongqiang
+	 * @Date: 2017年7月27日
+	 * @param basicDBObjects
+	 * @return
+	 */
+	private List<BasicDBObject> citySecondHandle(List<BasicDBObject> basicDBObjects) {
+		Map<String, BasicDBObject> temp = new HashMap<String, BasicDBObject>();
+		for (int i = 0; i < basicDBObjects.size(); i++) {
+			BasicDBObject basicDBObject = basicDBObjects.get(i);
+			// 取省份
+			String key = basicDBObject.getString("_id");
+			String newKey = LocationUtils.getProvince(key);
+			// 合并
+			BasicDBObject value = temp.get(newKey);
+			if (value == null) {
+				basicDBObject.put("_id", newKey);
+				value = basicDBObject;
+			} else {
+				value.put("count", value.getInt("count") + basicDBObject.getInt("count"));
+			}
+			temp.put(newKey, value);
+		}
+		// 转换成List
+		List<BasicDBObject> basicDBObjects2 = new ArrayList<BasicDBObject>();
+		Iterator<String> it = temp.keySet().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			basicDBObjects2.add(temp.get(key));
+		}
+		// 排序，也可以在页面排序
+		Collections.sort(basicDBObjects2, new Comparator<BasicDBObject>() {
+			public int compare(BasicDBObject o1, BasicDBObject o2) {
+				return o2.getInt("count") - o1.getInt("count");
+			}
+		});
+		return basicDBObjects2;
 	}
 }
